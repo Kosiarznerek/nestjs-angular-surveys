@@ -1,5 +1,5 @@
 <div class="row">
-  <form [formGroup]="formGroup" (submit)="submitForm()" class="col-12">
+  <form [formGroup]="formGroup" (submit)="onFormSubmitHandler()" class="col-12">
     <mat-card class="general">
       <mat-card-header>
         <mat-card-title>General information</mat-card-title>
@@ -348,6 +348,14 @@
       Add question
     </button>
 
-    <button type="submit" mat-raised-button color="primary">Create</button>
+    <div class="row actions">
+      <div class="col-md-6">
+        <button type="submit" mat-raised-button color="primary">Create</button>
+      </div>
+      <div class="spacer-15 hidden-md hidden-lg"></div>
+      <div class="col-md-6">
+        <a href="/" mat-raised-button color="warn">Cancel</a>
+      </div>
+    </div>
   </form>
 </div>

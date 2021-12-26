@@ -47,10 +47,15 @@ mat-card.question {
   }
 }
 
-button {
-  width: 100%;
+div.actions {
+  margin-top: 60px;
 
-  &[type='submit'] {
-    margin-top: 60px;
+  .spacer-15 {
+    height: 15px;
   }
+}
+
+button,
+a {
+  width: 100%;
 }

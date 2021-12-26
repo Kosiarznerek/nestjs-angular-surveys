@@ -128,7 +128,7 @@ export class CreatorComponent implements OnDestroy {
     this.questionsFormArray.insert(index, formGroup);
   }
 
-  public submitForm(): void {
+  public onFormSubmitHandler(): void {
     if (this.formGroup.invalid) {
       this.openMatSnackBar('Form is invalid');
       return;
