@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMinSize,
+  ArrayUnique,
   IsArray,
   IsIn,
   IsString,
@@ -31,6 +32,7 @@ export class CreateSelectQuestionMetadataDto
     | QuestionMetadataType.MultiSelectDropdown;
 
   @IsArray()
+  @ArrayUnique()
   @ArrayMinSize(2)
   @IsString({ each: true })
   @MinLength(5, { each: true })
