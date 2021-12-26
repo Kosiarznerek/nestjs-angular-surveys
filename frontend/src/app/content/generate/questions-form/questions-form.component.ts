@@ -9,7 +9,7 @@ import { QuestionMetadataType } from 'common';
   styleUrls: ['./questions-form.component.scss'],
 })
 export class QuestionsFormComponent {
-  public readonly formGroups: FormGroup[];
+  public readonly formGroup: FormGroup;
   public readonly EQuestionMetadataType: typeof QuestionMetadataType;
 
   private static readonly minimumQuestions: number = 3;
@@ -19,8 +19,16 @@ export class QuestionsFormComponent {
     private readonly formBuilder: FormBuilder,
     private readonly matSnackBar: MatSnackBar,
   ) {
-    this.formGroups = this.createFormGroups();
+    this.formGroup = this.createFormGroup();
     this.EQuestionMetadataType = QuestionMetadataType;
+  }
+
+  public get questionsFormArray(): FormArray {
+    return <FormArray>this.formGroup.get('questions');
+  }
+
+  public get questionsFormGroups(): FormGroup[] {
+    return <FormGroup[]>this.questionsFormArray.controls
   }
 
   public isTextQuestion(formGroup: FormGroup): boolean {
@@ -78,23 +86,23 @@ export class QuestionsFormComponent {
   }
 
   public addQuestion(): void {
-    const formGroup: FormGroup = this.createFormGroup();
-    this.formGroups.push(formGroup);
+    const formGroup: FormGroup = this.createQuestionFormGroup();
+    this.questionsFormArray.push(formGroup);
   }
 
   public removeQuestion(index: number): void {
-    if (this.formGroups.length <= QuestionsFormComponent.minimumQuestions) {
+    if (this.questionsFormArray.length <= QuestionsFormComponent.minimumQuestions) {
       this.openMatSnackBar(`There should be minumum ${QuestionsFormComponent.minimumQuestions} questions`)
     } else {
-      this.formGroups.splice(index, 1);
+      this.questionsFormArray.removeAt(index);
     }
   }
 
   public duplicateQuestion(index: number): void {
-    const formGroup: FormGroup = this.createFormGroup();
-    const templateValue: any = this.formGroups[index].getRawValue();
+    const formGroup: FormGroup = this.createQuestionFormGroup();
+    const templateValue: any = this.questionsFormGroups[index].getRawValue();
     formGroup.patchValue(templateValue);
-    this.formGroups.splice(index, 0, formGroup);
+    this.questionsFormArray.insert(index, formGroup);
   }
 
   private openMatSnackBar(message: string): MatSnackBarRef<TextOnlySnackBar> {
@@ -108,18 +116,19 @@ export class QuestionsFormComponent {
     return metadata.controls['type'].value;
   }
 
-  private createFormGroups(): FormGroup[] {
-    const formGroups: FormGroup[] = [];
+  private createFormGroup(): FormGroup {
+    const questions: FormArray = this.formBuilder.array([]);
+    const formGroup: FormGroup = this.formBuilder.group({ questions });
 
     for (let i = 0; i < QuestionsFormComponent.minimumQuestions; i++) {
-      const formGroup: FormGroup = this.createFormGroup();
-      formGroups.push(formGroup);
+      const formGroup: FormGroup = this.createQuestionFormGroup();
+      questions.push(formGroup);
     }
 
-    return formGroups;
+    return formGroup;
   }
 
-  private createFormGroup(): FormGroup {
+  private createQuestionFormGroup(): FormGroup {
     const formGroup: FormGroup = this.formBuilder.group({
       label: [undefined, Validators.compose([
         Validators.required,
