@@ -1,0 +1,33 @@
+#wrapper {
+  background: #3f51b5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  justify-content: center;
+  color: white;
+
+  div[class^='col'] {
+    margin: 15px 0px;
+
+    mat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      mat-icon {
+        width: 200px;
+        height: 200px;
+        font-size: 200px;
+        margin-bottom: 30px;
+      }
+    }
+  }
+}
