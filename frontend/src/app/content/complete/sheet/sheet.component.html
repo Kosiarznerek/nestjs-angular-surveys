@@ -12,7 +12,7 @@
       <mat-card-content>
         <div>
           <strong>Created at: </strong>
-          <span>{{ survey.createdAt | date }}</span>
+          <span>{{ survey.createdAt | date: 'long' }}</span>
         </div>
         <div>
           <strong>Public statistics: </strong>
@@ -28,11 +28,15 @@
         </div>
         <div>
           <strong>Submittable from: </strong>
-          <span>{{ (survey.submittableFrom | date) || 'Not defined' }}</span>
+          <span>
+            {{ (survey.submittableFrom | date: 'long') || 'Not defined' }}
+          </span>
         </div>
         <div>
           <strong>Submittable to: </strong>
-          <span>{{ (survey.submittableTo | date) || 'Not defined' }}</span>
+          <span>
+            {{ (survey.submittableTo | date: 'long') || 'Not defined' }}
+          </span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -42,6 +46,7 @@
 <div class="row">
   <form
     [formGroup]="formGroup"
+    [autocomplete]="'off'"
     (submit)="onFormSubmitHandler()"
     class="col-lg-12"
   >
@@ -82,12 +87,151 @@
           </ng-container>
         </ng-container>
 
-        <!-- TODO: Render question depending on metadata type -->
         <ng-template #singleQuestionTemplate let-question>
-          <mat-form-field class="w-100" appearance="fill">
-            <mat-label>{{ question.label }}</mat-label>
-            <input [formControlName]="question.identifier" matInput />
-          </mat-form-field>
+          <ng-container [ngSwitch]="question.metadata.type">
+            <ng-container *ngSwitchCase="EQuestionMetadataType.PlainText">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <input
+                  type="text"
+                  [formControlName]="question.identifier"
+                  matInput
+                />
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngSwitchCase="EQuestionMetadataType.EmailText">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <input
+                  type="text"
+                  [formControlName]="question.identifier"
+                  matInput
+                />
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngSwitchCase="EQuestionMetadataType.AreaText">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <textarea
+                  [formControlName]="question.identifier"
+                  matInput
+                ></textarea>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngSwitchCase="EQuestionMetadataType.DatePicker">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <input
+                  matInput
+                  [formControlName]="question.identifier"
+                  [matDatepicker]="picker"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngSwitchCase="EQuestionMetadataType.StandartNumber">
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <input
+                  type="number"
+                  [formControlName]="question.identifier"
+                  matInput
+                />
+              </mat-form-field>
+            </ng-container>
+            <ng-container
+              *ngSwitchCase="EQuestionMetadataType.SingleSelectRadio"
+            >
+              <label>
+                {{ question.label }}{{ question.isRequired ? ' *' : '' }}
+              </label>
+              <mat-radio-group
+                color="primary"
+                [formControlName]="question.identifier"
+              >
+                <mat-radio-button
+                  class="w-100"
+                  [value]="answer"
+                  *ngFor="let answer of question.metadata.availableValues"
+                >
+                  {{ answer }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </ng-container>
+            <ng-container
+              *ngSwitchCase="EQuestionMetadataType.SingleSelectCheckbox"
+            >
+              <label>
+                {{ question.label }}{{ question.isRequired ? ' *' : '' }}
+              </label>
+              <section class="mat-checkbox-section">
+                <mat-checkbox
+                  color="primary"
+                  class="w-100"
+                  [checked]="isSingleSelectCheckboxChecked(question, answer)"
+                  (change)="onSingleSelectCheckboxValueChange(question, answer)"
+                  *ngFor="let answer of question.metadata.availableValues"
+                >
+                  {{ answer }}
+                </mat-checkbox>
+              </section>
+            </ng-container>
+            <ng-container
+              *ngSwitchCase="EQuestionMetadataType.SingleSelectDropdown"
+            >
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <mat-select [formControlName]="question.identifier">
+                  <mat-option
+                    [value]="answer"
+                    *ngFor="let answer of question.metadata.availableValues"
+                  >
+                    {{ answer }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
+            <ng-container
+              *ngSwitchCase="EQuestionMetadataType.MultiSelectCheckbox"
+            >
+              <label>
+                {{ question.label }}{{ question.isRequired ? ' *' : '' }}
+              </label>
+              <section class="mat-checkbox-section">
+                <mat-checkbox
+                  color="primary"
+                  class="w-100"
+                  [checked]="isMultiSelectCheckboxChecked(question, answer)"
+                  (change)="onMultiSelectCheckboxValueChange(question, answer)"
+                  *ngFor="let answer of question.metadata.availableValues"
+                >
+                  {{ answer }}
+                </mat-checkbox>
+              </section>
+            </ng-container>
+            <ng-container
+              *ngSwitchCase="EQuestionMetadataType.MultiSelectDropdown"
+            >
+              <mat-form-field class="w-100" appearance="fill">
+                <mat-label>{{ question.label }}</mat-label>
+                <mat-select multiple [formControlName]="question.identifier">
+                  <mat-option
+                    [value]="answer"
+                    *ngFor="let answer of question.metadata.availableValues"
+                  >
+                    {{ answer }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              Question cannot be rendered
+            </ng-container>
+          </ng-container>
         </ng-template>
       </mat-card-content>
 

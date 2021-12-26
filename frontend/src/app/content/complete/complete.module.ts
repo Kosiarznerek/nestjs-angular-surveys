@@ -9,6 +9,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SummaryComponent } from './summary/summary.component';
 import { SheetComponent } from './sheet/sheet.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [SheetComponent, SummaryComponent],
@@ -21,6 +26,11 @@ import { SheetComponent } from './sheet/sheet.component';
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatSelectModule,
   ],
 })
 export class CompleteModule {}

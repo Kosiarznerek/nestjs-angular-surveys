@@ -64,11 +64,92 @@ export class SheetComponent {
   }
 
   public onFormSubmitHandler(): void {
-    const model: SubmissionAnswers = this.formGroup.getRawValue();
+    const model: SubmissionAnswers = this.stringifyFormGroupRawValue();
     this.fetchService
       .submitAnswers$(this.survey.identifier, model)
       .pipe(catchError(() => of(null)))
       .subscribe(this.afterSurveySubmitHandler.bind(this));
+  }
+
+  public isSingleSelectCheckboxChecked(
+    question: SurveyQuestion,
+    answer: string,
+  ): boolean {
+    const control: AbstractControl =
+      this.formGroup.controls[question.identifier];
+    return control.value === answer;
+  }
+
+  public onSingleSelectCheckboxValueChange(
+    question: SurveyQuestion,
+    answer: string,
+  ): void {
+    const control: AbstractControl =
+      this.formGroup.controls[question.identifier];
+
+    if (control.value === answer) {
+      control.setValue(null);
+    } else {
+      control.setValue(answer);
+    }
+  }
+
+  public isMultiSelectCheckboxChecked(
+    question: SurveyQuestion,
+    answer: string,
+  ): boolean {
+    const control: AbstractControl =
+      this.formGroup.controls[question.identifier];
+    return control.value?.includes(answer);
+  }
+
+  public onMultiSelectCheckboxValueChange(
+    question: SurveyQuestion,
+    answer: string,
+  ): void {
+    const control: AbstractControl =
+      this.formGroup.controls[question.identifier];
+    let controlValue: string[] | null = control.value;
+
+    if (!controlValue) {
+      controlValue = [answer];
+    } else if (!controlValue.includes(answer)) {
+      controlValue.push(answer);
+    } else {
+      const answerIndex: number = controlValue.indexOf(answer);
+      controlValue.splice(answerIndex, 1);
+    }
+
+    control.setValue(controlValue);
+  }
+
+  private stringifyFormGroupRawValue(): SubmissionAnswers {
+    const submissionAnswers: SubmissionAnswers = {};
+    const rawModel: Record<string, unknown> = this.formGroup.getRawValue();
+
+    for (const question of this.survey.questions) {
+      const rawValue: unknown = rawModel[question.identifier];
+      const value: string | null = this.stringifyQuestionAnswer(rawValue);
+      if (value !== null) {
+        submissionAnswers[question.identifier] = value;
+      }
+    }
+
+    return submissionAnswers;
+  }
+
+  private stringifyQuestionAnswer(answer: unknown): string | null {
+    if (typeof answer === 'string') {
+      return answer;
+    } else if (typeof answer === 'number') {
+      return answer.toString();
+    } else if (answer instanceof Date) {
+      return answer.toISOString();
+    } else if (answer instanceof Array) {
+      return JSON.stringify(answer);
+    } else {
+      return null;
+    }
   }
 
   private afterSurveySubmitHandler(submission: SurveySubmission | null): void {

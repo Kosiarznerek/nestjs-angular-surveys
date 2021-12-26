@@ -1,4 +1,4 @@
 export interface SummaryQueryParams {
-    surveyIdentifier: string;
-    submissionIdentifier: string;
+  surveyIdentifier: string;
+  submissionIdentifier: string;
 }
