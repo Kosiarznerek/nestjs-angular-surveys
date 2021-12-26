@@ -14,9 +14,11 @@ import {
 import {
   CreateSurvey,
   QuestionMetadataType,
+  Survey,
   SurveyDisplayFormat,
 } from 'common';
-import { startWith, Subject, takeUntil } from 'rxjs';
+import { mapTo, startWith, Subject, takeUntil } from 'rxjs';
+import { FetchService } from '../../fetch/fetch.service';
 
 @Component({
   selector: 'app-generate',
@@ -37,6 +39,7 @@ export class GenerateComponent implements OnDestroy {
   public constructor(
     private readonly formBuilder: FormBuilder,
     private readonly matSnackBar: MatSnackBar,
+    private readonly fetchService: FetchService,
   ) {
     this.ngOnDestroy$ = new Subject<void>();
     this.formGroup = this.createFormGroup();
@@ -128,7 +131,9 @@ export class GenerateComponent implements OnDestroy {
     }
 
     const model: CreateSurvey = this.formGroup.getRawValue();
-    console.log(model);
+    this.fetchService.create$(model).subscribe((survey: Survey) => {
+      this.openMatSnackBar('Survey has been created successfully');
+    });
   }
 
   private createSelectAvailableValueControl(): FormControl {
@@ -179,8 +184,24 @@ export class GenerateComponent implements OnDestroy {
     return metadata.controls['type'].value;
   }
 
+  private onQuestionsFormArrayChange(questions: FormGroup[]): void {
+    for (let index = 0; index < questions.length; index++) {
+      const question: FormGroup = questions[index];
+      const formControl: FormControl = new FormControl(index + 1);
+      question.addControl('orderIndex', formControl, {
+        emitEvent: false,
+      });
+    }
+  }
+
   private createFormGroup(): FormGroup {
     const questionsFormArray: FormArray = this.formBuilder.array([]);
+    questionsFormArray.valueChanges
+      .pipe(
+        takeUntil(this.ngOnDestroy$),
+        mapTo(<FormGroup[]>questionsFormArray.controls),
+      )
+      .subscribe((questions) => this.onQuestionsFormArrayChange(questions));
 
     for (let i = 0; i < GenerateComponent.minimumQuestions; i++) {
       const formGroup: FormGroup = this.createQuestionFormGroup();
@@ -241,30 +262,54 @@ export class GenerateComponent implements OnDestroy {
       .forEach((controlName) => formGroup.removeControl(controlName));
 
     if (this.isTextQuestion(questionMetadataType)) {
-      formGroup.addControl(
-        'minimumLength',
-        new FormControl(undefined, Validators.min(1)),
-      );
-      formGroup.addControl(
-        'maximumLength',
-        new FormControl(undefined, Validators.min(1)),
-      );
+      this.addTextQuestionMetadataControls(formGroup);
     } else if (this.isNumberQuestion(questionMetadataType)) {
-      formGroup.addControl('minimumValue', new FormControl());
-      formGroup.addControl('maximumValue', new FormControl());
+      this.addNumberQuestionMetadataControls(formGroup);
     } else if (this.isDateQuestion(questionMetadataType)) {
-      formGroup.addControl('minimumISODate', new FormControl());
-      formGroup.addControl('maximumISODate', new FormControl());
+      this.addDateQuestionMetadataControls(formGroup);
     } else if (this.isSelectQuestion(questionMetadataType)) {
-      const formArray: FormArray = this.formBuilder.array([]);
-
-      for (let i = 0; i < GenerateComponent.minimumSelectValues; i++) {
-        const formControl: FormControl =
-          this.createSelectAvailableValueControl();
-        formArray.push(formControl);
-      }
-
-      formGroup.addControl('availableValues', formArray);
+      this.addSelectQuestionMetadataControls(formGroup);
     }
+  }
+
+  private addTextQuestionMetadataControls(formGroup: FormGroup): void {
+    const minimumLength: FormControl = new FormControl(
+      undefined,
+      Validators.min(1),
+    );
+    const maximumLength: FormControl = new FormControl(
+      undefined,
+      Validators.min(1),
+    );
+
+    formGroup.addControl('minimumLength', minimumLength);
+    formGroup.addControl('maximumLength', maximumLength);
+  }
+
+  private addNumberQuestionMetadataControls(formGroup: FormGroup): void {
+    const minimumValue: FormControl = new FormControl();
+    const maximumValue: FormControl = new FormControl();
+
+    formGroup.addControl('minimumValue', minimumValue);
+    formGroup.addControl('maximumValue', maximumValue);
+  }
+
+  private addDateQuestionMetadataControls(formGroup: FormGroup): void {
+    const minimumISODate: FormControl = new FormControl();
+    const maximumISODate: FormControl = new FormControl();
+
+    formGroup.addControl('minimumISODate', minimumISODate);
+    formGroup.addControl('maximumISODate', maximumISODate);
+  }
+
+  private addSelectQuestionMetadataControls(formGroup: FormGroup): void {
+    const formArray: FormArray = this.formBuilder.array([]);
+
+    for (let i = 0; i < GenerateComponent.minimumSelectValues; i++) {
+      const formControl: FormControl = this.createSelectAvailableValueControl();
+      formArray.push(formControl);
+    }
+
+    formGroup.addControl('availableValues', formArray);
   }
 }
