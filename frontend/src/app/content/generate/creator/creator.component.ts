@@ -230,6 +230,20 @@ export class CreatorComponent implements OnDestroy {
     }
   }
 
+  private onTimeLimitChange(): void {
+    for (const questions of this.questionsFormGroups) {
+      const isRequired: AbstractControl = questions.controls['isRequired'];
+      const timeLimit: number = questions.get('timeLimitInSeconds')?.value;
+
+      if (typeof timeLimit === 'number') {
+        isRequired.setValue(false, { emitEvent: false });
+        isRequired.disable({ emitEvent: false });
+      } else {
+        isRequired.enable({ emitEvent: false });
+      }
+    }
+  }
+
   private createFormGroup(): FormGroup {
     const questionsFormArray: FormArray = this.formBuilder.array([]);
     questionsFormArray.valueChanges
@@ -266,6 +280,15 @@ export class CreatorComponent implements OnDestroy {
   }
 
   private createQuestionFormGroup(): FormGroup {
+    const timeLimitControl: FormControl = new FormControl(
+      undefined,
+      Validators.min(1),
+    );
+
+    timeLimitControl.valueChanges
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(() => this.onTimeLimitChange());
+
     return this.formBuilder.group({
       label: [
         undefined,
@@ -276,7 +299,7 @@ export class CreatorComponent implements OnDestroy {
         ]),
       ],
       isRequired: [true, Validators.required],
-      timeLimitInSeconds: [undefined, Validators.min(1)],
+      timeLimitInSeconds: timeLimitControl,
       metadata: this.createMetadataFormGroup(),
     });
   }
