@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
@@ -211,6 +212,24 @@ export class CreatorComponent implements OnDestroy {
     }
   }
 
+  private onDisplayFormatChange(formGroup: FormGroup): void {
+    const controls: Record<string, AbstractControl> = formGroup.controls;
+    const format: SurveyDisplayFormat = controls['displayFormat'].value;
+    const questionsArray: FormArray = <FormArray>controls['questions'];
+    const questionsGroups: FormGroup[] = <FormGroup[]>questionsArray.controls;
+
+    for (const questionGroup of questionsGroups) {
+      const control: AbstractControl = questionGroup.get('timeLimitInSeconds')!;
+      control.setValue(undefined, { emitEvent: false });
+
+      if (format === SurveyDisplayFormat.SingleRestricted) {
+        control.enable({ emitEvent: false });
+      } else {
+        control.disable({ emitEvent: false });
+      }
+    }
+  }
+
   private createFormGroup(): FormGroup {
     const questionsFormArray: FormArray = this.formBuilder.array([]);
     questionsFormArray.valueChanges
@@ -225,14 +244,25 @@ export class CreatorComponent implements OnDestroy {
       questionsFormArray.push(formGroup);
     }
 
-    return this.formBuilder.group({
+    const displayFormatControl: FormControl = new FormControl(
+      SurveyDisplayFormat.AllAtOnce,
+      Validators.required,
+    );
+
+    const formGroup: FormGroup = this.formBuilder.group({
       publicStatistics: [true, Validators.required],
-      displayFormat: [SurveyDisplayFormat.AllAtOnce, Validators.required],
+      displayFormat: displayFormatControl,
       submittableFrom: [undefined],
       submittableTo: [undefined],
       maximumSubmissions: [undefined, Validators.min(1)],
       questions: questionsFormArray,
     });
+
+    displayFormatControl.valueChanges
+      .pipe(takeUntil(this.ngOnDestroy$), startWith(formGroup))
+      .subscribe(() => this.onDisplayFormatChange(formGroup));
+
+    return formGroup;
   }
 
   private createQuestionFormGroup(): FormGroup {
