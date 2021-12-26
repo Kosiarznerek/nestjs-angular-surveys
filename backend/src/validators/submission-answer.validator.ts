@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   isDateString,
   isEmail,
+  isNumberString,
   isString,
   max,
   maxLength,
@@ -232,12 +233,18 @@ export class SubmissionAnswerValidator implements PipeTransform {
     metadata: NumberQuestionMetadataEntity,
   ): string[] {
     const errors: string[] = [];
+    const value: number = +answer;
     const { minimumValue, maximumValue } = metadata;
 
-    if (minimumValue && !min(answer, minimumValue)) {
+    if (isNumberString(answer)) {
+      errors.push('is invalid number string');
+      return errors;
+    }
+
+    if (minimumValue && !min(value, minimumValue)) {
       errors.push(`did not reached minimum value of ${minimumValue}`);
     }
-    if (maximumValue && !max(answer, maximumValue)) {
+    if (maximumValue && !max(value, maximumValue)) {
       errors.push(`is over maximum value of ${maximumValue}`);
     }
 
