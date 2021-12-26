@@ -9,8 +9,7 @@ import { Router } from '@angular/router';
 export class LandingComponent {
   public constructor(private readonly router: Router) {}
 
-  public navigate(path: string): Promise<boolean> {
-    console.log('qq');
-    return this.router.navigate([path]);
+  public navigateContent(path: string): Promise<boolean> {
+    return this.router.navigate([`/surveys/${path}`]);
   }
 }

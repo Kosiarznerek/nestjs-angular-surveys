@@ -10,31 +10,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'archive',
+    path: 'surveys',
     loadChildren: () =>
-      import('./archive/archive.module').then(
-        ({ ArchiveModule }) => ArchiveModule,
-      ),
-  },
-  {
-    path: 'complete',
-    loadChildren: () =>
-      import('./complete/complete.module').then(
-        ({ CompleteModule }) => CompleteModule,
-      ),
-  },
-  {
-    path: 'generate',
-    loadChildren: () =>
-      import('./generate/generate.module').then(
-        ({ GenerateModule }) => GenerateModule,
-      ),
-  },
-  {
-    path: 'results',
-    loadChildren: () =>
-      import('./results/results.module').then(
-        ({ ResultsModule }) => ResultsModule,
+      import('./content/content.module').then(
+        ({ ContentModule }) => ContentModule,
       ),
   },
   {

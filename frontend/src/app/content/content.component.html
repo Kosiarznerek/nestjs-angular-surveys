@@ -1,0 +1,14 @@
+<!-- Header -->
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <h1>{{ toolbarHeaderText$ | async }}</h1>
+    <button mat-icon-button (click)="navigateLanding()">
+      <mat-icon>home</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- Content -->
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
