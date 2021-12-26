@@ -23,7 +23,7 @@ npm run ci:frontend
 - Use and enjoy sample survey
     ```
     Identifier: c6769b1a-17ca-41eb-b0be-6cea19f7a778
-    Authentication token: 0de9083d-37b7-4771-ae5b-8b5c8f37cd4b
+    Authentication token: e0e1b912-36b1-4e5a-b261-cd8c7971d4bf
     ```
 
 ## TODO
