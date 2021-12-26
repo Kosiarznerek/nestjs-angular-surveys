@@ -1,18 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  Param,
-  Post,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateSurveyDto } from '../dtos/create-survey/create-survey.dto';
-import { SubmissionAnswersDto } from '../dtos/submission-answers.dto';
-import { SurveyStatisticsDto } from '../dtos/survey-statistics.dto';
-import { SurveySubmissionDto } from '../dtos/survey-submission.dto';
+import { SurveyStatisticsDto } from '../dtos/survey-statistics/survey-statistics.dto';
+import { SubmissionAnswersDto } from '../dtos/survey-submission/submission-answers.dto';
+import { SurveySubmissionDto } from '../dtos/survey-submission/survey-submission.dto';
 import { SurveyDto } from '../dtos/survey/survey.dto';
 import { AuthenticationTokenGuard } from '../guards/authentication-token.guard';
 import { SurveyStatisticsGuard } from '../guards/survey-statistics.guard';

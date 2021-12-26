@@ -19,7 +19,7 @@ import {
   minLength,
 } from 'class-validator';
 import { Repository } from 'typeorm';
-import { SubmissionAnswersDto } from '../dtos/submission-answers.dto';
+import { SubmissionAnswersDto } from '../dtos/survey-submission/submission-answers.dto';
 import { DateQuestionMetadataEntity } from '../entities/date-question-metadata.entity';
 import { NumberQuestionMetadataEntity } from '../entities/number-question-metadata.entity';
 import { SelectQuestionMetadataEntity } from '../entities/select-question-metadata.entity';
@@ -193,7 +193,11 @@ export class SubmissionAnswerValidator implements PipeTransform {
       case QuestionMetadataType.MultiSelectCheckbox:
       case QuestionMetadataType.MultiSelectDropdown:
         errors.push(
-          ...this.getErrorsForSelectAnswer(answer, question.metadata),
+          ...this.getErrorsForSelectAnswer(
+            answer,
+            question.isRequired,
+            question.metadata,
+          ),
         );
         break;
       default:
@@ -222,7 +226,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
       errors.push(`did not reached minimum length of ${minimumLength}`);
     }
     if (maximumLength && !maxLength(answer, maximumLength)) {
-      errors.push(`is over maximim length of ${maximumLength}`);
+      errors.push(`is over maximum length of ${maximumLength}`);
     }
 
     return errors;
@@ -277,6 +281,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
 
   private getErrorsForSelectAnswer(
     answer: string,
+    isRequired: boolean,
     metadata: SelectQuestionMetadataEntity,
   ): string[] {
     const isMultiSelect: boolean =
@@ -284,7 +289,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
       metadata.type === QuestionMetadataType.MultiSelectDropdown;
 
     if (isMultiSelect) {
-      return this.getErrorsForMultiSelectAnswer(answer, metadata);
+      return this.getErrorsForMultiSelectAnswer(answer, isRequired, metadata);
     } else {
       return this.getErrorsForSingleSelectAnswer(answer, metadata);
     }
@@ -308,6 +313,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
 
   private getErrorsForMultiSelectAnswer(
     answer: string,
+    isRequired: boolean,
     metadata: SelectQuestionMetadataEntity,
   ): string[] {
     let selectedValues: string[] = [];
@@ -322,6 +328,10 @@ export class SubmissionAnswerValidator implements PipeTransform {
 
     const errors: string[] = [];
     const { availableValues } = metadata;
+
+    if (isRequired && selectedValues.length === 0) {
+      errors.push('is required and cannot contain empty array');
+    }
 
     for (const selectedValue of selectedValues) {
       const valueIsValid: boolean = availableValues.includes(selectedValue);
