@@ -14,7 +14,10 @@ const validate = (value: CreateSurveyQuestionDto[]): boolean => {
     (question) => question.orderIndex,
   );
   const questionIndexesSet: Set<number> = new Set<number>(questionIndexes);
-  const sortedUniqueIndexes: number[] = Array.from(questionIndexesSet).sort();
+  const questionIndexesArray: number[] = Array.from(questionIndexesSet);
+  const sortedUniqueIndexes: number[] = questionIndexesArray.sort(
+    (a, b) => a - b,
+  );
 
   if (sortedUniqueIndexes.length !== value.length) {
     return false;
