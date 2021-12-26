@@ -9,11 +9,10 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
-  registerDecorator,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 import { SurveyDisplayFormat } from '../../enums/survey-display-format.enum';
+import { SurveyQuestionsHaveValidOrderValidator } from '../../validators/survey-questions-have-valid-order.validator';
 import { CreateSurveyQuestionDto } from './create-survey-question.dto';
 
 export class CreateSurveyDto {
@@ -46,47 +45,7 @@ export class CreateSurveyDto {
   @IsArray()
   @ArrayMinSize(3)
   @ValidateNested()
-  @HaveValidOrderIndex()
   @Type(() => CreateSurveyQuestionDto)
+  @SurveyQuestionsHaveValidOrderValidator()
   public questions: CreateSurveyQuestionDto[];
-}
-
-function HaveValidOrderIndex() {
-  return (object: Object, propertyName: string) =>
-    registerDecorator({
-      name: 'HaveValidOrderIndex',
-      target: object.constructor,
-      propertyName: propertyName,
-      validator: {
-        defaultMessage(validationArguments?: ValidationArguments): string {
-          return `${validationArguments?.property} must have unique orderIndexes starting from 1 with step 1`;
-        },
-        validate(value: CreateSurveyQuestionDto[]) {
-          if (!Array.isArray(value)) {
-            return false;
-          }
-
-          const questionIndexes: number[] = value.map(
-            (question) => question.orderIndex,
-          );
-          const questionIndexesSet: Set<number> = new Set<number>(
-            questionIndexes,
-          );
-          const sortedUniqueIndexes: number[] =
-            Array.from(questionIndexesSet).sort();
-
-          if (sortedUniqueIndexes.length !== value.length) {
-            return false;
-          }
-
-          for (let index = 0; index < sortedUniqueIndexes.length; index++) {
-            if (sortedUniqueIndexes[index] !== index + 1) {
-              return false;
-            }
-          }
-
-          return true;
-        },
-      },
-    });
 }

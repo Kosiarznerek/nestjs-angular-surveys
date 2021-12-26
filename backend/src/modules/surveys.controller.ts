@@ -1,7 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Param,
+  Post,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateSurveyDto } from '../dtos/create-survey/create-survey.dto';
+import { SubmissionAnswersDto } from '../dtos/submission-answers.dto';
+import { SurveyStatisticsDto } from '../dtos/survey-statistics.dto';
+import { SurveySubmissionDto } from '../dtos/survey-submission.dto';
 import { SurveyDto } from '../dtos/survey/survey.dto';
+import { AuthenticationTokenGuard } from '../guards/authentication-token.guard';
+import { SurveyStatisticsGuard } from '../guards/survey-statistics.guard';
+import { SubmissionAnswerValidator } from '../validators/submission-answer.validator';
 import { SurveysService } from './surveys.service';
 
 @ApiTags('surveys')
@@ -10,7 +25,51 @@ export class SurveysController {
   public constructor(private readonly surveysService: SurveysService) {}
 
   @Post()
-  public createSurvey(@Body() body: CreateSurveyDto): Promise<SurveyDto> {
-    return this.surveysService.createSurvey(body);
+  public create(@Body() body: CreateSurveyDto): Promise<SurveyDto> {
+    return this.surveysService.create(body);
+  }
+
+  @Get(':surveyIdentifier')
+  public findOne(
+    @Param('surveyIdentifier') surveyIdentifier: string,
+  ): Promise<SurveyDto> {
+    return this.surveysService.findOne(surveyIdentifier);
+  }
+
+  @Get(':surveyIdentifier/statistics')
+  @SurveyStatisticsGuard()
+  public getStatistics(
+    @Param('surveyIdentifier') surveyIdentifier: string,
+  ): Promise<SurveyStatisticsDto> {
+    return this.surveysService.getStatistics(surveyIdentifier);
+  }
+
+  @Post(':surveyIdentifier/submissions')
+  @ApiBody({ type: Object })
+  @UsePipes(SubmissionAnswerValidator)
+  public submitAnswers(
+    @Body() answers: SubmissionAnswersDto,
+    @Param('surveyIdentifier') surveyIdentifier: string,
+  ): Promise<SurveySubmissionDto> {
+    return this.surveysService.submitAnswers(surveyIdentifier, answers);
+  }
+
+  @Get(':surveyIdentifier/submissions')
+  @AuthenticationTokenGuard()
+  public findAllSubmissions(
+    @Param('surveyIdentifier') surveyIdentifier: string,
+  ): Promise<SurveySubmissionDto[]> {
+    return this.surveysService.findAllSubmissions(surveyIdentifier);
+  }
+
+  @Get(':surveyIdentifier/submissions/:submissionIdentifier')
+  public findOneSubmission(
+    @Param('surveyIdentifier') surveyIdentifier: string,
+    @Param('submissionIdentifier') submissionIdentifier: string,
+  ): Promise<SurveySubmissionDto> {
+    return this.surveysService.findOneSubmission(
+      surveyIdentifier,
+      submissionIdentifier,
+    );
   }
 }
