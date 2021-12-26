@@ -22,13 +22,18 @@ export class SummaryComponent {
     this.EAuthenticationQueryParam = AuthQueryParam;
   }
 
-  public navigateHome(): Promise<boolean> {
-    return this.router.navigate(['/']);
-  }
-
   public nagivateResults(): Promise<boolean> {
     return this.router.navigate(['/surveys/results'], {
       queryParams: this.queryParams,
+    });
+  }
+
+  public navigateComplete(): Promise<boolean> {
+    const surveyId: string = this.queryParams[AuthQueryParam.SurveyIdentifier];
+    return this.router.navigate(['/surveys/complete'], {
+      queryParams: {
+        [AuthQueryParam.SurveyIdentifier]: surveyId,
+      },
     });
   }
 }
