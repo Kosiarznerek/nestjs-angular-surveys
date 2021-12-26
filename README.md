@@ -25,3 +25,8 @@ npm run ci:frontend
     Identifier: c6769b1a-17ca-41eb-b0be-6cea19f7a778
     Authentication token: 0de9083d-37b7-4771-ae5b-8b5c8f37cd4b
     ```
+
+## TODO
+- Respect question time limit
+- Add validation check on date questions
+- Add calidation check on select questions
