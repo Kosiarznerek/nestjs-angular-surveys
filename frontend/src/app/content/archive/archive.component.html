@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12">
+  <div class="col-lg-12">
     <mat-card>
       <mat-card-title>
         <h1>General information</h1>
@@ -51,7 +51,7 @@
 <div class="spacer-60"></div>
 
 <div class="row">
-  <div class="col-12">
+  <div class="col-lg-12">
     <mat-card>
       <mat-card-title>
         <h1>Submitted answers</h1>
@@ -60,7 +60,10 @@
       <mat-divider></mat-divider>
 
       <mat-card-content>
-        <div class="row" *ngFor="let question of survey.questions">
+        <div
+          class="row"
+          *ngFor="let question of survey.questions; let questionIndex = index"
+        >
           <div class="col-sm-6">{{ question.label }}</div>
           <div class="col-sm-6">
             <ng-container [ngSwitch]="question.metadata.type">
@@ -74,9 +77,11 @@
               </ng-container>
             </ng-container>
           </div>
+          <div
+            *ngIf="questionIndex < survey.questions.length - 1"
+            class="spacer-15 visible-xs"
+          ></div>
         </div>
-
-        <div class="spacer-15 visible-xs"></div>
       </mat-card-content>
     </mat-card>
   </div>

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ArchiveRoutingModule } from './archive.routing';
 import { ArchiveComponent } from './archive.component';
-import { FetchModule } from '../../fetch/fetch.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -11,7 +10,6 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ArchiveRoutingModule,
-    FetchModule,
     MatCardModule,
     MatDividerModule,
   ],
