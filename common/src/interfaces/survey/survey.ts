@@ -3,7 +3,7 @@ import { SurveyQuestion } from './survey-question';
 
 export interface Survey {
   identifier: string;
-  authenticationToken: string;
+  authenticationToken?: string;
   createdAt: string;
   publicStatistics: boolean;
   displayFormat: SurveyDisplayFormat;

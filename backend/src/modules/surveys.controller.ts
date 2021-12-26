@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Survey } from 'common';
 import { CreateSurveyDto } from '../dtos/create-survey/create-survey.dto';
 import { SurveyStatisticsDto } from '../dtos/survey-statistics/survey-statistics.dto';
 import { SubmissionAnswersDto } from '../dtos/survey-submission/submission-answers.dto';
@@ -21,10 +22,12 @@ export class SurveysController {
   }
 
   @Get(':surveyIdentifier')
-  public findOne(
+  public async findOne(
     @Param('surveyIdentifier') surveyIdentifier: string,
   ): Promise<SurveyDto> {
-    return this.surveysService.findOne(surveyIdentifier);
+    const survey: Survey = await this.surveysService.findOne(surveyIdentifier);
+    delete survey.authenticationToken;
+    return survey;
   }
 
   @Get(':surveyIdentifier/statistics')

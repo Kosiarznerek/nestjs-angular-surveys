@@ -1,4 +1,4 @@
 export interface SummaryQueryParams {
   identifier: string;
-  authenticationToken: string;
+  authenticationToken?: string;
 }

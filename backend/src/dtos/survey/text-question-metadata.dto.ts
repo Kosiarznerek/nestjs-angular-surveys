@@ -13,6 +13,6 @@ export class TextQuestionMetadataDto implements TextQuestionMetadata {
     | QuestionMetadataType.PlainText
     | QuestionMetadataType.EmailText
     | QuestionMetadataType.AreaText;
-  public minimumLength?: number;
-  public maximumLength?: number;
+  public minimumLength: number | null;
+  public maximumLength: number | null;
 }

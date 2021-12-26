@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CompleteComponent } from './complete.component';
-import { CompleteResolverService } from './complete.resolver';
+import { SheetComponent } from './sheet/sheet.component';
+import { SheetResolverService } from './sheet/sheet.resolver';
+import { SummaryComponent } from './summary/summary.component';
 
 const routes: Routes = [
   {
     path: '',
     resolve: {
-      survey: CompleteResolverService,
+      survey: SheetResolverService,
     },
-    component: CompleteComponent,
+    component: SheetComponent,
+  },
+  {
+    path: 'summary',
+    component: SummaryComponent,
   },
 ];
 

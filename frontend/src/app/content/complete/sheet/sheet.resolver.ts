@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Survey } from 'common';
 import { catchError, Observable, of, tap } from 'rxjs';
-import { AuthenticateOutputQueryParams } from '../../authenticate/authenticate.models';
-import { FetchService } from '../../fetch/fetch.service';
+import { AuthenticateOutputQueryParams } from '../../../authenticate/authenticate.models';
+import { FetchService } from '../../../fetch/fetch.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CompleteResolverService implements Resolve<Survey> {
+export class SheetResolverService implements Resolve<Survey> {
   public constructor(
     private readonly router: Router,
     private readonly fetchService: FetchService,

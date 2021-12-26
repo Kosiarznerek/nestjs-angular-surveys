@@ -5,6 +5,6 @@ export interface TextQuestionMetadata {
     | QuestionMetadataType.PlainText
     | QuestionMetadataType.EmailText
     | QuestionMetadataType.AreaText;
-  minimumLength?: number;
-  maximumLength?: number;
+  minimumLength: number | null;
+  maximumLength: number | null;
 }

@@ -1,8 +1,14 @@
 <div class="row">
-  <form [formGroup]="formGroup" (submit)="onFormSubmitHandler()" class="col-12">
+  <form
+    [formGroup]="formGroup"
+    (submit)="onFormSubmitHandler()"
+    class="col-lg-12"
+  >
     <mat-card class="general">
       <mat-card-header>
-        <mat-card-title>General information</mat-card-title>
+        <mat-card-title>
+          <h1>General information</h1>
+        </mat-card-title>
       </mat-card-header>
 
       <mat-divider></mat-divider>
@@ -91,7 +97,9 @@
         "
       >
         <mat-card-header>
-          <mat-card-title>Question {{ questionIndex + 1 }}</mat-card-title>
+          <mat-card-title>
+            <h1>Question {{ questionIndex + 1 }}</h1>
+          </mat-card-title>
         </mat-card-header>
 
         <mat-divider></mat-divider>
@@ -350,7 +358,14 @@
 
     <div class="row actions">
       <div class="col-md-6">
-        <button type="submit" mat-raised-button color="primary">Create</button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          [disabled]="formGroup.invalid"
+        >
+          Create
+        </button>
       </div>
       <div class="spacer-15 hidden-md hidden-lg"></div>
       <div class="col-md-6">

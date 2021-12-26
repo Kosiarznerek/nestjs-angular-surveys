@@ -129,11 +129,6 @@ export class CreatorComponent implements OnDestroy {
   }
 
   public onFormSubmitHandler(): void {
-    if (this.formGroup.invalid) {
-      this.openMatSnackBar('Form is invalid');
-      return;
-    }
-
     const model: CreateSurvey = this.formGroup.getRawValue();
     this.fetchService
       .create$(model)

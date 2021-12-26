@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateSurvey, Survey } from 'common';
+import {
+  CreateSurvey,
+  SubmissionAnswers,
+  Survey,
+  SurveySubmission,
+} from 'common';
 import { Observable } from 'rxjs';
 import { FetchModule } from './fetch.module';
 
@@ -18,12 +23,20 @@ export class FetchService {
     this.controllerPath = `${this.origin}/${this.controllerName}`;
   }
 
+  public create$(model: CreateSurvey): Observable<Survey> {
+    return this.httpClient.post<Survey>(this.controllerPath, model);
+  }
+
   public findOne$(identifier: string): Observable<Survey> {
     const url: string = `${this.controllerPath}/${identifier}`;
     return this.httpClient.get<Survey>(url);
   }
 
-  public create$(model: CreateSurvey): Observable<Survey> {
-    return this.httpClient.post<Survey>(this.controllerPath, model);
+  public submitAnswers$(
+    identifier: string,
+    model: SubmissionAnswers,
+  ): Observable<SurveySubmission> {
+    const url: string = `${this.controllerPath}/${identifier}/submissions`;
+    return this.httpClient.post<SurveySubmission>(url, model);
   }
 }

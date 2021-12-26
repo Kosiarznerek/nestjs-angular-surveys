@@ -6,6 +6,6 @@ export class NumberQuestionMetadataDto implements NumberQuestionMetadata {
     enum: [QuestionMetadataType.StandartNumber],
   })
   public type: QuestionMetadataType.StandartNumber;
-  public minimumValue?: number;
-  public maximumValue?: number;
+  public minimumValue: number | null;
+  public maximumValue: number | null;
 }

@@ -3,7 +3,7 @@ import { SurveyQuestionDto } from './survey-question.dto';
 
 export class SurveyDto implements Survey {
   public identifier: string;
-  public authenticationToken: string;
+  public authenticationToken?: string;
   public createdAt: string;
   public publicStatistics: boolean;
   public displayFormat: SurveyDisplayFormat;

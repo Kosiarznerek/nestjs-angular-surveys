@@ -6,6 +6,6 @@ export class DateQuestionMetadataDto implements DateQuestionMetadata {
     enum: [QuestionMetadataType.DatePicker],
   })
   public type: QuestionMetadataType.DatePicker;
-  public minimumISODate?: string;
-  public maximumISODate?: string;
+  public minimumISODate: string | null;
+  public maximumISODate: string | null;
 }
