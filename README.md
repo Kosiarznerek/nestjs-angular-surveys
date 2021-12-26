@@ -25,3 +25,9 @@ npm run ci:frontend
     Identifier: c6769b1a-17ca-41eb-b0be-6cea19f7a778
     Authentication token: e0e1b912-36b1-4e5a-b261-cd8c7971d4bf
     ```
+
+# Screenshots
+![Screenshot_0](https://raw.githubusercontent.com/Kosiarznerek/nestjs-angular-surveys/main/screenshots/0.png)
+![Screenshot_1](https://raw.githubusercontent.com/Kosiarznerek/nestjs-angular-surveys/main/screenshots/1.png)
+![Screenshot_2](https://raw.githubusercontent.com/Kosiarznerek/nestjs-angular-surveys/main/screenshots/2.png)
+![Screenshot_3](https://raw.githubusercontent.com/Kosiarznerek/nestjs-angular-surveys/main/screenshots/3.png)
