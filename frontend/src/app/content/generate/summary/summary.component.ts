@@ -13,7 +13,7 @@ export class SummaryComponent {
 
   public constructor(
     private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.queryParams$ = <Observable<SummaryQueryParams>>(
       this.activatedRoute.queryParams
@@ -21,12 +21,12 @@ export class SummaryComponent {
   }
 
   public navigateHome(): Promise<boolean> {
-    return this.router.navigate(['/'])
+    return this.router.navigate(['/']);
   }
 
   public createAnotherSurvey(): Promise<boolean> {
     return this.router.navigate(['../'], {
       relativeTo: this.activatedRoute,
-    })
+    });
   }
 }
