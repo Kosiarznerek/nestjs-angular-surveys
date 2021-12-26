@@ -12,6 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { GeneralsFormComponent } from './generals-form/generals-form.component';
 import { QuestionsFormComponent } from './questions-form/questions-form.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatNativeDateModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
   ],
 })
 export class GenerateModule {}
