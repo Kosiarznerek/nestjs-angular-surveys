@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticateOutputQueryParams } from './authenticate.model';
+import { AuthenticateOutputQueryParams } from './authenticate.models';
 
 @Component({
   selector: 'app-authenticate',

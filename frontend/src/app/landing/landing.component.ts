@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticateInputQueryParams } from '../authenticate/authenticate.model';
+import { AuthenticateInputQueryParams } from '../authenticate/authenticate.models';
 
 @Component({
   selector: 'app-landing',

@@ -9,15 +9,21 @@ import { FetchModule } from './fetch.module';
 })
 export class FetchService {
   private readonly origin: string;
-  private readonly controller: string;
+  private readonly controllerName: string;
+  private readonly controllerPath: string;
 
   public constructor(private readonly httpClient: HttpClient) {
     this.origin = 'http://localhost:3000';
-    this.controller = 'surveys';
+    this.controllerName = 'surveys';
+    this.controllerPath = `${this.origin}/${this.controllerName}`;
+  }
+
+  public findOne$(identifier: string): Observable<Survey> {
+    const url: string = `${this.controllerPath}/${identifier}`;
+    return this.httpClient.get<Survey>(url);
   }
 
   public create$(model: CreateSurvey): Observable<Survey> {
-    const url: string = `${this.origin}/${this.controller}`;
-    return this.httpClient.post<Survey>(url, model);
+    return this.httpClient.post<Survey>(this.controllerPath, model);
   }
 }

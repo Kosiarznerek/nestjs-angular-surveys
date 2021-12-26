@@ -11,7 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { FetchModule } from '../../fetch/fetch.module';
 import { CreatorComponent } from './creator/creator.component';
 import { SummaryComponent } from './summary/summary.component';
 
@@ -30,7 +29,6 @@ import { SummaryComponent } from './summary/summary.component';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    FetchModule,
   ],
 })
 export class GenerateModule {}

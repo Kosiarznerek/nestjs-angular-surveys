@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -24,15 +25,13 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'not-found',
+    path: 'error',
     loadChildren: () =>
-      import('./not-found/not-found.module').then(
-        ({ NotFoundModule }) => NotFoundModule,
-      ),
+      import('./error/error.module').then(({ ErrorModule }) => ErrorModule),
   },
   {
     path: '**',
-    redirectTo: 'not-found',
+    redirectTo: `error/${HttpStatusCode.NotFound}`,
   },
 ];
 

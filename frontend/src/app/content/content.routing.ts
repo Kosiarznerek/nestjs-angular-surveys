@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ContentComponent } from './content.component';
@@ -34,6 +35,10 @@ const routes: Routes = [
           import('./results/results.module').then(
             ({ ResultsModule }) => ResultsModule,
           ),
+      },
+      {
+        path: '**',
+        redirectTo: `/error/${HttpStatusCode.NotFound}`,
       },
     ],
   },
