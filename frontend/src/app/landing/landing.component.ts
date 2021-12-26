@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticateInputQueryParams } from '../authenticate/authenticate.models';
+import {
+  AuthenticationConfiguration,
+  AuthQueryParam,
+} from '../authenticate/authenticate.models';
 
 @Component({
   selector: 'app-landing',
@@ -15,28 +18,33 @@ export class LandingComponent {
   }
 
   public navigateComplete(): Promise<boolean> {
-    const queryParams: AuthenticateInputQueryParams = {
+    const queryParams: AuthenticationConfiguration = {
       redirectTo: '/surveys/complete',
-      requireSurveyIdendifier: true,
+      outputQueryParams: [AuthQueryParam.SurveyIdentifier],
     };
 
     return this.router.navigate(['/authenticate'], { queryParams });
   }
 
   public navigateResults(): Promise<boolean> {
-    const queryParams: AuthenticateInputQueryParams = {
+    const queryParams: AuthenticationConfiguration = {
       redirectTo: '/surveys/results',
-      requireSurveyIdendifier: true,
-      requiredSurveyAuthenticationToken: true,
+      outputQueryParams: [
+        AuthQueryParam.SurveyIdentifier,
+        AuthQueryParam.SurveyAuthToken,
+      ],
     };
 
     return this.router.navigate(['/authenticate'], { queryParams });
   }
 
   public navigateArchive(): Promise<boolean> {
-    const queryParams: AuthenticateInputQueryParams = {
+    const queryParams: AuthenticationConfiguration = {
       redirectTo: '/surveys/archive',
-      requireSurveyIdendifier: true,
+      outputQueryParams: [
+        AuthQueryParam.SurveyIdentifier,
+        AuthQueryParam.SubmissionIndentifier,
+      ],
     };
 
     return this.router.navigate(['/authenticate'], { queryParams });

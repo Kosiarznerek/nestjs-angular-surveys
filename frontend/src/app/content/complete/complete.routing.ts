@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SheetComponent } from './sheet/sheet.component';
 import { SheetResolverService } from './sheet/sheet.resolver';
 import { SummaryComponent } from './summary/summary.component';
+import { SummaryGuard } from './summary/summary.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
   {
     path: 'summary',
     component: SummaryComponent,
+    canActivate: [SummaryGuard],
   },
 ];
 

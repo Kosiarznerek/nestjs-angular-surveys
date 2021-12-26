@@ -11,10 +11,11 @@
 
       <mat-card-content>
         <p>Your survey has been created successfully</p>
-        <p *ngIf="queryParams$ | async as queryParams">
-          <strong>Identifier</strong>: {{ queryParams.identifier }}<br />
-          <strong>Authentication token</strong>:
-          {{ queryParams.authenticationToken }}<br />
+        <p>
+          <strong>Survey identifier</strong>:
+          {{ queryParams[EAuthenticationQueryParam.SurveyIdentifier] }}<br />
+          <strong>Survey authentication token</strong>:
+          {{ queryParams[EAuthenticationQueryParam.SurveyAuthToken] }}<br />
         </p>
       </mat-card-content>
 
@@ -22,8 +23,8 @@
 
       <mat-card-actions>
         <button mat-button (click)="navigateHome()">Navigate home</button>
-        <button mat-button (click)="createAnotherSurvey()">
-          Create another survey
+        <button mat-button (click)="nagivateResults()">
+          See survey results
         </button>
       </mat-card-actions>
     </mat-card>

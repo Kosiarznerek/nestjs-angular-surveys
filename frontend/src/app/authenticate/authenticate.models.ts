@@ -1,10 +1,10 @@
-export interface AuthenticateInputQueryParams {
-  redirectTo: string;
-  requireSurveyIdendifier?: boolean;
-  requiredSurveyAuthenticationToken?: boolean;
+export enum AuthQueryParam {
+  SurveyIdentifier = 'surveyidentifier',
+  SubmissionIndentifier = 'submissionIndentifier',
+  SurveyAuthToken = 'surveyAuthenticationToken',
 }
 
-export interface AuthenticateOutputQueryParams {
-  surveyIdendifier?: string;
-  surveyAuthenticationToken?: string;
+export interface AuthenticationConfiguration {
+  redirectTo: string;
+  outputQueryParams: AuthQueryParam[];
 }

@@ -14,8 +14,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { SummaryGuard } from './summary/summary.guard';
 
 @NgModule({
+  providers: [SummaryGuard],
   declarations: [SheetComponent, SummaryComponent],
   imports: [
     CommonModule,

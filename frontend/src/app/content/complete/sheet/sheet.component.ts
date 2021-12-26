@@ -21,8 +21,9 @@ import {
   TextQuestionMetadata,
 } from 'common';
 import { catchError, of } from 'rxjs';
+import { AuthQueryParam } from '../../../authenticate/authenticate.models';
 import { FetchService } from '../../../fetch/fetch.service';
-import { SummaryQueryParams } from '../summary/summary.models';
+import { SummaryQueryParams } from '../complete.models';
 
 @Component({
   selector: 'app-sheet',
@@ -163,8 +164,8 @@ export class SheetComponent {
       );
     } else {
       const summaryQueryParams: SummaryQueryParams = {
-        surveyIdentifier: this.survey.identifier,
-        submissionIdentifier: submission.identifier,
+        [AuthQueryParam.SurveyIdentifier]: this.survey.identifier,
+        [AuthQueryParam.SubmissionIndentifier]: submission.identifier,
       };
 
       this.router.navigate(['summary'], {

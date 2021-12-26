@@ -19,6 +19,7 @@ import {
   SurveyDisplayFormat,
 } from 'common';
 import { catchError, mapTo, of, startWith, Subject, takeUntil } from 'rxjs';
+import { AuthQueryParam } from '../../../authenticate/authenticate.models';
 import { FetchService } from '../../../fetch/fetch.service';
 import { SummaryQueryParams } from '../generate.model';
 
@@ -141,8 +142,8 @@ export class CreatorComponent implements OnDestroy {
       this.openMatSnackBar('Oops. It looks like something went wrong');
     } else {
       const summaryQueryParams: SummaryQueryParams = {
-        identifier: survey.identifier,
-        authenticationToken: survey.authenticationToken,
+        [AuthQueryParam.SurveyIdentifier]: survey.identifier,
+        [AuthQueryParam.SurveyAuthToken]: survey.authenticationToken!,
       };
 
       this.router.navigate(['summary'], {

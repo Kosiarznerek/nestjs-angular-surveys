@@ -1,1 +1,33 @@
-<p>summary works!</p>
+<div class="row">
+  <div class="col-lg-3"></div>
+
+  <div class="col-lg-6">
+    <mat-card>
+      <mat-card-title>
+        <h1>Everything is fine</h1>
+      </mat-card-title>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <p>Your answers has been submitted successfully</p>
+        <p>
+          <strong>Survey identifier</strong>:
+          {{ queryParams[EAuthenticationQueryParam.SurveyIdentifier] }}<br />
+          <strong>Submission identifier</strong>:
+          {{ queryParams[EAuthenticationQueryParam.SubmissionIndentifier]
+          }}<br />
+        </p>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions>
+        <button mat-button (click)="navigateHome()">Navigate home</button>
+        <button mat-button (click)="navigateArchive()">See my answers</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="col-lg-3"></div>
+</div>

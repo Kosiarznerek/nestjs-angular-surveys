@@ -13,8 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CreatorComponent } from './creator/creator.component';
 import { SummaryComponent } from './summary/summary.component';
+import { SummaryGuard } from './summary/summary.guard';
 
 @NgModule({
+  providers: [SummaryGuard],
   declarations: [CreatorComponent, SummaryComponent],
   imports: [
     CommonModule,

@@ -17,7 +17,7 @@
 
           <mat-card-content>
             <mat-form-field
-              *ngIf="requireSurveyIdendifier"
+              *ngIf="hasSurveyidentifier"
               class="w-100"
               appearance="fill"
             >
@@ -25,11 +25,11 @@
               <input
                 type="text"
                 matInput
-                [formControlName]="'surveyIdendifier'"
+                [formControlName]="EAuthQueryParam.SurveyIdentifier"
               />
             </mat-form-field>
             <mat-form-field
-              *ngIf="requiredSurveyAuthenticationToken"
+              *ngIf="hasSurveyAuthenticationToken"
               class="w-100"
               appearance="fill"
             >
@@ -37,7 +37,19 @@
               <input
                 type="text"
                 matInput
-                [formControlName]="'surveyAuthenticationToken'"
+                [formControlName]="EAuthQueryParam.SurveyAuthToken"
+              />
+            </mat-form-field>
+            <mat-form-field
+              *ngIf="hasSubmissionIndentifier"
+              class="w-100"
+              appearance="fill"
+            >
+              <mat-label>Submission identifier</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControlName]="EAuthQueryParam.SubmissionIndentifier"
               />
             </mat-form-field>
           </mat-card-content>

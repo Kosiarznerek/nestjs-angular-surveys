@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { AuthQueryParam } from '../../../authenticate/authenticate.models';
 import { SummaryQueryParams } from '../generate.model';
 
 @Component({
@@ -9,24 +9,26 @@ import { SummaryQueryParams } from '../generate.model';
   styleUrls: ['./summary.component.scss'],
 })
 export class SummaryComponent {
-  public readonly queryParams$: Observable<SummaryQueryParams>;
+  public readonly queryParams: SummaryQueryParams;
+  public readonly EAuthenticationQueryParam: typeof AuthQueryParam;
 
   public constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
   ) {
-    this.queryParams$ = <Observable<SummaryQueryParams>>(
-      this.activatedRoute.queryParams
+    this.queryParams = <SummaryQueryParams>(
+      this.activatedRoute.snapshot.queryParams
     );
+    this.EAuthenticationQueryParam = AuthQueryParam;
   }
 
   public navigateHome(): Promise<boolean> {
     return this.router.navigate(['/']);
   }
 
-  public createAnotherSurvey(): Promise<boolean> {
-    return this.router.navigate(['../'], {
-      relativeTo: this.activatedRoute,
+  public nagivateResults(): Promise<boolean> {
+    return this.router.navigate(['/surveys/results'], {
+      queryParams: this.queryParams,
     });
   }
 }

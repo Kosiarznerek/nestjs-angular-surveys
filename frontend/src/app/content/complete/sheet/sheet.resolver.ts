@@ -1,9 +1,14 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import {
+  Resolve,
+  ActivatedRouteSnapshot,
+  Router,
+  Params,
+} from '@angular/router';
 import { Survey } from 'common';
-import { catchError, Observable, of, tap } from 'rxjs';
-import { AuthenticateOutputQueryParams } from '../../../authenticate/authenticate.models';
+import { catchError, Observable, of } from 'rxjs';
+import { AuthQueryParam } from '../../../authenticate/authenticate.models';
 import { FetchService } from '../../../fetch/fetch.service';
 
 @Injectable({
@@ -16,15 +21,16 @@ export class SheetResolverService implements Resolve<Survey> {
   ) {}
 
   public resolve(routeSnapshot: ActivatedRouteSnapshot): Observable<Survey> {
-    const queryParams: AuthenticateOutputQueryParams =
-      routeSnapshot.queryParams;
+    const queryParams: Params = routeSnapshot.queryParams;
+    const queryParamName: string = AuthQueryParam.SurveyIdentifier;
+    const surveyId: string | undefined = queryParams[queryParamName];
 
-    if (!queryParams.surveyIdendifier) {
+    if (!surveyId) {
       this.router.navigate([`/error/${HttpStatusCode.BadRequest}`]);
       return of();
     } else {
       return this.fetchService
-        .findOne$(queryParams.surveyIdendifier)
+        .findOne$(surveyId)
         .pipe(catchError((error: unknown) => this.handleError(error)));
     }
   }

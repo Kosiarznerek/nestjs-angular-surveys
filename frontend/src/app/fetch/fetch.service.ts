@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CreateSurvey,
   SubmissionAnswers,
   Survey,
+  SurveyStatistics,
   SurveySubmission,
 } from 'common';
 import { Observable } from 'rxjs';
@@ -32,11 +33,45 @@ export class FetchService {
     return this.httpClient.get<Survey>(url);
   }
 
+  public getStatistics$(
+    identifier: string,
+    authenticationToken?: string,
+  ): Observable<SurveyStatistics> {
+    const url: string = `${this.controllerPath}/${identifier}/statistics`;
+
+    let headers: HttpHeaders = new HttpHeaders();
+    if (authenticationToken) {
+      headers = headers.append('authentication-token', authenticationToken);
+    }
+
+    return this.httpClient.get<SurveyStatistics>(url, { headers });
+  }
+
   public submitAnswers$(
     identifier: string,
     model: SubmissionAnswers,
   ): Observable<SurveySubmission> {
     const url: string = `${this.controllerPath}/${identifier}/submissions`;
     return this.httpClient.post<SurveySubmission>(url, model);
+  }
+
+  public findAllSubmissions$(
+    identifier: string,
+    authenticationToken: string,
+  ): Observable<SurveySubmission[]> {
+    const url: string = `${this.controllerPath}/${identifier}/submissions`;
+
+    let headers: HttpHeaders = new HttpHeaders();
+    headers = headers.append('authentication-token', authenticationToken);
+
+    return this.httpClient.get<SurveySubmission[]>(url, { headers });
+  }
+
+  public findOneSubmission$(
+    surveyIdentifier: string,
+    submissionIdentifier: string,
+  ): Observable<SurveySubmission> {
+    const url: string = `${this.controllerPath}/${surveyIdentifier}/submissions/${submissionIdentifier}`;
+    return this.httpClient.get<SurveySubmission>(url);
   }
 }
