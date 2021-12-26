@@ -16,13 +16,11 @@ export class CreateNumberQuestionMetadataDto
   public type: QuestionMetadataType.StandartNumber;
 
   @IsNumber()
-  @IsPositive()
   @IsOptional()
   @ApiProperty({ example: 1 })
   public minimumValue?: number;
 
   @IsNumber()
-  @IsPositive()
   @IsOptional()
   @ApiProperty({ example: 10 })
   public maximumValue?: number;
