@@ -1,8 +1,270 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar,
+} from '@angular/material/snack-bar';
+import {
+  CreateSurvey,
+  QuestionMetadataType,
+  SurveyDisplayFormat,
+} from 'common';
+import { startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-generate',
   templateUrl: './generate.component.html',
   styleUrls: ['./generate.component.scss'],
 })
-export class GenerateComponent {}
+export class GenerateComponent implements OnDestroy {
+  public readonly formGroup: FormGroup;
+
+  public readonly ESurveyDisplayFormat: typeof SurveyDisplayFormat;
+  public readonly EQuestionMetadataType: typeof QuestionMetadataType;
+
+  private readonly ngOnDestroy$: Subject<void>;
+
+  private static readonly minimumQuestions: number = 3;
+  private static readonly minimumSelectValues: number = 2;
+
+  public constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly matSnackBar: MatSnackBar,
+  ) {
+    this.ngOnDestroy$ = new Subject<void>();
+    this.formGroup = this.createFormGroup();
+
+    this.ESurveyDisplayFormat = SurveyDisplayFormat;
+    this.EQuestionMetadataType = QuestionMetadataType;
+  }
+
+  public ngOnDestroy(): void {
+    this.ngOnDestroy$.next();
+  }
+
+  public get questionsFormArray(): FormArray {
+    return <FormArray>this.formGroup.get('questions');
+  }
+
+  public get questionsFormGroups(): FormGroup[] {
+    return <FormGroup[]>this.questionsFormArray.controls;
+  }
+
+  public shouldDisplayTextMetadata(formGroup: FormGroup): boolean {
+    const questionType: QuestionMetadataType = this.getMetadataType(formGroup);
+    return this.isTextQuestion(questionType);
+  }
+
+  public shouldDisplayNumberMetadata(formGroup: FormGroup): boolean {
+    const questionType: QuestionMetadataType = this.getMetadataType(formGroup);
+    return this.isNumberQuestion(questionType);
+  }
+
+  public shouldDisplayDateMetadata(formGroup: FormGroup): boolean {
+    const questionType: QuestionMetadataType = this.getMetadataType(formGroup);
+    return this.isDateQuestion(questionType);
+  }
+
+  public shouldDisplaySelectMetadata(formGroup: FormGroup): boolean {
+    const questionType: QuestionMetadataType = this.getMetadataType(formGroup);
+    return this.isSelectQuestion(questionType);
+  }
+
+  public getSelectAvailableValues(formGroup: FormGroup): FormArray {
+    return <FormArray>formGroup.get('metadata.availableValues');
+  }
+
+  public removeSelectAvailableValue(formGroup: FormGroup, index: number): void {
+    const formArray: FormArray = this.getSelectAvailableValues(formGroup);
+
+    if (formArray.controls.length <= GenerateComponent.minimumSelectValues) {
+      this.openMatSnackBar(
+        `There should be minumum ${GenerateComponent.minimumSelectValues} values`,
+      );
+    } else {
+      formArray.controls.splice(index, 1);
+    }
+  }
+
+  public addSelectAvailableValue(formGroup: FormGroup): void {
+    const formArray: FormArray = this.getSelectAvailableValues(formGroup);
+    const formControl: FormControl = this.createSelectAvailableValueControl();
+    formArray.push(formControl);
+  }
+
+  public addQuestion(): void {
+    const formGroup: FormGroup = this.createQuestionFormGroup();
+    this.questionsFormArray.push(formGroup);
+  }
+
+  public removeQuestion(index: number): void {
+    if (this.questionsFormArray.length <= GenerateComponent.minimumQuestions) {
+      this.openMatSnackBar(
+        `There should be minumum ${GenerateComponent.minimumQuestions} questions`,
+      );
+    } else {
+      this.questionsFormArray.removeAt(index);
+    }
+  }
+
+  public duplicateQuestion(index: number): void {
+    const formGroup: FormGroup = this.createQuestionFormGroup();
+    const templateValue: any = this.questionsFormGroups[index].getRawValue();
+    formGroup.patchValue(templateValue);
+    this.questionsFormArray.insert(index, formGroup);
+  }
+
+  public submitForm(): void {
+    if (this.formGroup.invalid) {
+      this.openMatSnackBar('Form is invalid');
+      return;
+    }
+
+    const model: CreateSurvey = this.formGroup.getRawValue();
+    console.log(model);
+  }
+
+  private createSelectAvailableValueControl(): FormControl {
+    return new FormControl(
+      undefined,
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(400),
+      ]),
+    );
+  }
+
+  private isTextQuestion(questionType: QuestionMetadataType): boolean {
+    return [
+      QuestionMetadataType.PlainText,
+      QuestionMetadataType.EmailText,
+      QuestionMetadataType.AreaText,
+    ].includes(questionType);
+  }
+
+  private isNumberQuestion(questionType: QuestionMetadataType): boolean {
+    return questionType === QuestionMetadataType.StandartNumber;
+  }
+
+  private isDateQuestion(questionType: QuestionMetadataType): boolean {
+    return questionType === QuestionMetadataType.DatePicker;
+  }
+
+  private isSelectQuestion(questionType: QuestionMetadataType): boolean {
+    return [
+      QuestionMetadataType.SingleSelectRadio,
+      QuestionMetadataType.SingleSelectCheckbox,
+      QuestionMetadataType.SingleSelectDropdown,
+      QuestionMetadataType.MultiSelectCheckbox,
+      QuestionMetadataType.MultiSelectDropdown,
+    ].includes(questionType);
+  }
+
+  private openMatSnackBar(message: string): MatSnackBarRef<TextOnlySnackBar> {
+    return this.matSnackBar.open(message, 'Close', {
+      duration: 5_000,
+    });
+  }
+
+  private getMetadataType(formGroup: FormGroup): QuestionMetadataType {
+    const metadata: FormGroup = <FormGroup>formGroup.controls['metadata'];
+    return metadata.controls['type'].value;
+  }
+
+  private createFormGroup(): FormGroup {
+    const questionsFormArray: FormArray = this.formBuilder.array([]);
+
+    for (let i = 0; i < GenerateComponent.minimumQuestions; i++) {
+      const formGroup: FormGroup = this.createQuestionFormGroup();
+      questionsFormArray.push(formGroup);
+    }
+
+    return this.formBuilder.group({
+      publicStatistics: [true, Validators.required],
+      displayFormat: [SurveyDisplayFormat.AllAtOnce, Validators.required],
+      submittableFrom: [undefined],
+      submittableTo: [undefined],
+      maximumSubmissions: [undefined, Validators.min(1)],
+      questions: questionsFormArray,
+    });
+  }
+
+  private createQuestionFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      label: [
+        undefined,
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(400),
+        ]),
+      ],
+      isRequired: [true, Validators.required],
+      timeLimitInSeconds: [undefined, Validators.min(1)],
+      metadata: this.createMetadataFormGroup(),
+    });
+  }
+
+  private createMetadataFormGroup(): FormGroup {
+    const typeFormControl: FormControl = new FormControl(
+      QuestionMetadataType.PlainText,
+      Validators.required,
+    );
+
+    const metadataFormGroup: FormGroup = this.formBuilder.group({
+      type: typeFormControl,
+    });
+
+    typeFormControl.valueChanges
+      .pipe(startWith(null), takeUntil(this.ngOnDestroy$))
+      .subscribe(() => {
+        this.onMetadataTypeChange(metadataFormGroup);
+      });
+
+    return metadataFormGroup;
+  }
+
+  private onMetadataTypeChange(formGroup: FormGroup): void {
+    const typeFormControl: FormControl = <FormControl>formGroup.get('type');
+    const questionMetadataType: QuestionMetadataType = typeFormControl.value;
+
+    Object.keys(formGroup.controls)
+      .filter((controlName) => controlName !== 'type')
+      .forEach((controlName) => formGroup.removeControl(controlName));
+
+    if (this.isTextQuestion(questionMetadataType)) {
+      formGroup.addControl(
+        'minimumLength',
+        new FormControl(undefined, Validators.min(1)),
+      );
+      formGroup.addControl(
+        'maximumLength',
+        new FormControl(undefined, Validators.min(1)),
+      );
+    } else if (this.isNumberQuestion(questionMetadataType)) {
+      formGroup.addControl('minimumValue', new FormControl());
+      formGroup.addControl('maximumValue', new FormControl());
+    } else if (this.isDateQuestion(questionMetadataType)) {
+      formGroup.addControl('minimumISODate', new FormControl());
+      formGroup.addControl('maximumISODate', new FormControl());
+    } else if (this.isSelectQuestion(questionMetadataType)) {
+      const formArray: FormArray = this.formBuilder.array([]);
+
+      for (let i = 0; i < GenerateComponent.minimumSelectValues; i++) {
+        const formControl: FormControl =
+          this.createSelectAvailableValueControl();
+        formArray.push(formControl);
+      }
+
+      formGroup.addControl('availableValues', formArray);
+    }
+  }
+}

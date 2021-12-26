@@ -9,18 +9,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { GeneralsFormComponent } from './generals-form/generals-form.component';
-import { QuestionsFormComponent } from './questions-form/questions-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [
-    GenerateComponent,
-    GeneralsFormComponent,
-    QuestionsFormComponent,
-  ],
+  declarations: [GenerateComponent],
   imports: [
     CommonModule,
     GenerateRoutingModule,
