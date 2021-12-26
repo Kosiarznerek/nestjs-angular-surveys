@@ -240,7 +240,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
     const value: number = +answer;
     const { minimumValue, maximumValue } = metadata;
 
-    if (isNumberString(answer)) {
+    if (!isNumberString(answer)) {
       errors.push('is invalid number string');
       return errors;
     }
@@ -318,7 +318,7 @@ export class SubmissionAnswerValidator implements PipeTransform {
   ): string[] {
     let selectedValues: string[] = [];
     try {
-      const selectedValues: string[] = JSON.parse(answer);
+      selectedValues = JSON.parse(answer);
       if (!Array.isArray(selectedValues)) {
         throw new Error();
       }
