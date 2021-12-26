@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-lg-3"></div>
+
+  <div class="col-lg-6">
+    <mat-card>
+      <mat-card-title>
+        <h1>Everything is fine</h1>
+      </mat-card-title>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <p>Your survey has been created successfully</p>
+        <p *ngIf="queryParams$ | async as queryParams">
+          <strong>Identifier</strong>: {{ queryParams.identifier }}<br />
+          <strong>Authentication token</strong>: {{ queryParams.authenticationToken }}<br />
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button (click)="navigateHome()">
+          Navigate home
+        </button>
+        <button mat-button (click)="createAnotherSurvey()">
+          Create another survey
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="col-lg-3"></div>
+</div>

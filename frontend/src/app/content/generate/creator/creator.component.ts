@@ -11,21 +11,23 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar,
 } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   CreateSurvey,
   QuestionMetadataType,
   Survey,
   SurveyDisplayFormat,
 } from 'common';
-import { mapTo, startWith, Subject, takeUntil } from 'rxjs';
-import { FetchService } from '../../fetch/fetch.service';
+import { catchError, mapTo, of, startWith, Subject, takeUntil } from 'rxjs';
+import { FetchService } from '../../../fetch/fetch.service';
+import { SummaryQueryParams } from '../generate.model';
 
 @Component({
-  selector: 'app-generate',
-  templateUrl: './generate.component.html',
-  styleUrls: ['./generate.component.scss'],
+  selector: 'app-creator',
+  templateUrl: './creator.component.html',
+  styleUrls: ['./creator.component.scss'],
 })
-export class GenerateComponent implements OnDestroy {
+export class CreatorComponent implements OnDestroy {
   public readonly formGroup: FormGroup;
 
   public readonly ESurveyDisplayFormat: typeof SurveyDisplayFormat;
@@ -37,9 +39,11 @@ export class GenerateComponent implements OnDestroy {
   private static readonly minimumSelectValues: number = 2;
 
   public constructor(
+    private readonly router: Router,
     private readonly formBuilder: FormBuilder,
     private readonly matSnackBar: MatSnackBar,
     private readonly fetchService: FetchService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.ngOnDestroy$ = new Subject<void>();
     this.formGroup = this.createFormGroup();
@@ -87,9 +91,9 @@ export class GenerateComponent implements OnDestroy {
   public removeSelectAvailableValue(formGroup: FormGroup, index: number): void {
     const formArray: FormArray = this.getSelectAvailableValues(formGroup);
 
-    if (formArray.controls.length <= GenerateComponent.minimumSelectValues) {
+    if (formArray.controls.length <= CreatorComponent.minimumSelectValues) {
       this.openMatSnackBar(
-        `There should be minumum ${GenerateComponent.minimumSelectValues} values`,
+        `There should be minumum ${CreatorComponent.minimumSelectValues} values`,
       );
     } else {
       formArray.controls.splice(index, 1);
@@ -108,9 +112,9 @@ export class GenerateComponent implements OnDestroy {
   }
 
   public removeQuestion(index: number): void {
-    if (this.questionsFormArray.length <= GenerateComponent.minimumQuestions) {
+    if (this.questionsFormArray.length <= CreatorComponent.minimumQuestions) {
       this.openMatSnackBar(
-        `There should be minumum ${GenerateComponent.minimumQuestions} questions`,
+        `There should be minumum ${CreatorComponent.minimumQuestions} questions`,
       );
     } else {
       this.questionsFormArray.removeAt(index);
@@ -131,9 +135,26 @@ export class GenerateComponent implements OnDestroy {
     }
 
     const model: CreateSurvey = this.formGroup.getRawValue();
-    this.fetchService.create$(model).subscribe((survey: Survey) => {
-      this.openMatSnackBar('Survey has been created successfully');
-    });
+    this.fetchService
+      .create$(model)
+      .pipe(catchError(() => of(null)))
+      .subscribe(this.afterSurveySubmitHandler.bind(this));
+  }
+
+  private afterSurveySubmitHandler(survey: Survey | null): void {
+    if (!survey) {
+      this.openMatSnackBar('Oops. It looks like something went wrong');
+    } else {
+      const summaryQueryParams: SummaryQueryParams = {
+        identifier: survey.identifier,
+        authenticationToken: survey.authenticationToken,
+      };
+
+      this.router.navigate(['summary'], {
+        relativeTo: this.activatedRoute,
+        queryParams: summaryQueryParams,
+      });
+    }
   }
 
   private createSelectAvailableValueControl(): FormControl {
@@ -203,7 +224,7 @@ export class GenerateComponent implements OnDestroy {
       )
       .subscribe((questions) => this.onQuestionsFormArrayChange(questions));
 
-    for (let i = 0; i < GenerateComponent.minimumQuestions; i++) {
+    for (let i = 0; i < CreatorComponent.minimumQuestions; i++) {
       const formGroup: FormGroup = this.createQuestionFormGroup();
       questionsFormArray.push(formGroup);
     }
@@ -305,7 +326,7 @@ export class GenerateComponent implements OnDestroy {
   private addSelectQuestionMetadataControls(formGroup: FormGroup): void {
     const formArray: FormArray = this.formBuilder.array([]);
 
-    for (let i = 0; i < GenerateComponent.minimumSelectValues; i++) {
+    for (let i = 0; i < CreatorComponent.minimumSelectValues; i++) {
       const formControl: FormControl = this.createSelectAvailableValueControl();
       formArray.push(formControl);
     }

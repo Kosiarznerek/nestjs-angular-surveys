@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GenerateComponent } from './generate.component';
+import { CreatorComponent } from './creator/creator.component';
+import { SummaryComponent } from './summary/summary.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: GenerateComponent,
+    component: CreatorComponent,
+  },
+  {
+    path: 'summary',
+    component: SummaryComponent,
   },
 ];
 

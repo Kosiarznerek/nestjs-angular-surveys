@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GenerateRoutingModule } from './generate.routing';
-import { GenerateComponent } from './generate.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,9 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FetchModule } from '../../fetch/fetch.module';
+import { CreatorComponent } from './creator/creator.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
-  declarations: [GenerateComponent],
+  declarations: [CreatorComponent, SummaryComponent],
   imports: [
     CommonModule,
     GenerateRoutingModule,
