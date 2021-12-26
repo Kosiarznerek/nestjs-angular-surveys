@@ -1,0 +1,16 @@
+mat-card {
+  padding-bottom: 0;
+
+  &:not(:last-child) {
+    margin-bottom: 60px;
+  }
+
+  mat-card-content {
+    margin-top: 16px;
+  }
+}
+
+button {
+  width: 100%;
+  margin-top: 60px;
+}

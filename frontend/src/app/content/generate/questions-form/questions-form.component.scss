@@ -1,0 +1,40 @@
+mat-card {
+  margin-bottom: 30px;
+  position: relative;
+
+  mat-card-content {
+    padding-top: 16px;
+    margin-bottom: 0;
+  }
+
+  mat-card-actions {
+    display: flex;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    background: #673ab7;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 30px;
+    background: #e0e0e0;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 100%);
+  }
+}
+
+button {
+  width: 100%;
+}
