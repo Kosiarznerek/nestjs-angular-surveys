@@ -1,0 +1,49 @@
+.spacer-15 {
+  height: 15px;
+}
+
+.spacer-30 {
+  height: 30px;
+}
+
+.spacer-60 {
+  height: 60px;
+}
+
+.mr-0 {
+  margin: 0;
+}
+
+mat-card {
+  p,
+  mat-card-title {
+    text-align: center;
+  }
+
+  mat-card-content {
+    padding-top: 16px;
+
+    .row {
+      > div.col-sm-6:nth-child(1) {
+        font-weight: bold;
+      }
+      > div.col-sm-6:nth-child(2) {
+        text-align: right;
+      }
+    }
+  }
+}
+
+mat-expansion-panel {
+  margin-bottom: 30px;
+}
+
+.survey-submission {
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-top: 30px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
