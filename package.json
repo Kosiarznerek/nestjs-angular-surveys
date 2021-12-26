@@ -1,0 +1,35 @@
+{
+  "name": "surveys",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "prepare": "husky install",
+    "postinstall": "npm run ci:common && npm run build:common && npm run ci:backend && npm run ci:frontend",
+    "pre-commit-handler": "npm run lint-staged:backend && npm run lint-staged:common && npm run lint-staged:frontend",
+    "lint-staged:common": "cd ./common && npx lint-staged && cd ../",
+    "lint-staged:backend": "cd ./backend && npx lint-staged && cd ../",
+    "lint-staged:frontend": "cd ./frontend && npx lint-staged && cd ../",
+    "build:common": "cd ./common && npm run build && cd ../",
+    "build:backend": "cd ./backend && npm run build && cd ../",
+    "build:frontend": "cd ./frontend && npm run build && cd ../",
+    "ci:common": "cd ./common && npm ci && cd ../",
+    "ci:backend": "cd ./backend && npm ci && cd ../",
+    "ci:frontend": "cd ./frontend && npm ci && cd ../",
+    "start:backend": "cd ./backend && npm run start:dev && cd ../",
+    "start:frontend": "cd ./frontend && npm run start && cd ../"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kosiarznerek/surveys.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kosiarznerek/surveys/issues"
+  },
+  "homepage": "https://github.com/Kosiarznerek/surveys#readme",
+  "devDependencies": {
+    "husky": "^7.0.0"
+  }
+}

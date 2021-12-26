@@ -1,0 +1,9 @@
+{
+    "type": "sqljs",
+    "location": "dist/database",
+    "autoSave": true,
+    "entities": [
+        "dist/**/*.entity{.ts,.js}"
+    ],
+    "synchronize": true
+}
