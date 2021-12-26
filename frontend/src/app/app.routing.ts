@@ -17,6 +17,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'authenticate',
+    loadChildren: () =>
+      import('./authenticate/authenticate.module').then(
+        ({ AuthenticateModule }) => AuthenticateModule,
+      ),
+  },
+  {
     path: 'not-found',
     loadChildren: () =>
       import('./not-found/not-found.module').then(

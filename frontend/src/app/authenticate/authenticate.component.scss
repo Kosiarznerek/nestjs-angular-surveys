@@ -1,0 +1,27 @@
+#wrapper {
+  background: #3f51b5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  color: white;
+
+  mat-card {
+    mat-card-title {
+      text-align: center;
+    }
+
+    mat-card-content {
+      padding-top: 16px;
+      margin-bottom: 0;
+    }
+
+    mat-card-actions {
+      display: flex;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
