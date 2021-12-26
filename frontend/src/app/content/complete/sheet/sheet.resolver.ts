@@ -22,8 +22,9 @@ export class SheetResolverService implements Resolve<Survey> {
 
   public resolve(routeSnapshot: ActivatedRouteSnapshot): Observable<Survey> {
     const queryParams: Params = routeSnapshot.queryParams;
-    const queryParamName: string = AuthQueryParam.SurveyIdentifier;
-    const surveyId: string | undefined = queryParams[queryParamName];
+
+    const surveyIdQueryParam: string = AuthQueryParam.SurveyIdentifier;
+    const surveyId: string | undefined = queryParams[surveyIdQueryParam];
 
     if (!surveyId) {
       this.router.navigate([`/error/${HttpStatusCode.BadRequest}`]);
