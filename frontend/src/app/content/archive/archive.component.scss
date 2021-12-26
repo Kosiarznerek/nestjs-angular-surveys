@@ -1,0 +1,27 @@
+.spacer-15 {
+  height: 15px;
+}
+
+.spacer-60 {
+  height: 60px;
+}
+
+mat-card {
+  p,
+  mat-card-title {
+    text-align: center;
+  }
+
+  mat-card-content {
+    padding-top: 16px;
+
+    .row {
+      > div:first-child {
+        font-weight: bold;
+      }
+      > div:last-child {
+        text-align: right;
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-title>
+        <h1>General information</h1>
+      </mat-card-title>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col-sm-6">Submission identifier</div>
+          <div class="col-sm-6">{{ surveySubmission.identifier }}</div>
+        </div>
+        <div class="spacer-15 visible-xs"></div>
+        <div class="row">
+          <div class="col-sm-6">Answers submitted at</div>
+          <div class="col-sm-6">
+            {{ surveySubmission.createdAt | date: 'long' }}
+          </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+          <div class="col-sm-6">Survey identifier</div>
+          <div class="col-sm-6">{{ survey.identifier }}</div>
+        </div>
+        <div class="spacer-15 visible-xs"></div>
+        <div class="row">
+          <div class="col-sm-6">Survey created at</div>
+          <div class="col-sm-6">{{ survey.createdAt | date: 'long' }}</div>
+        </div>
+        <div class="spacer-15 visible-xs"></div>
+        <div class="row">
+          <div class="col-sm-6">Survey submittable from</div>
+          <div class="col-sm-6">
+            {{ survey.submittableFrom | date: 'long' }}
+          </div>
+        </div>
+        <div class="spacer-15 visible-xs"></div>
+        <div class="row">
+          <div class="col-sm-6">Survey submittable to</div>
+          <div class="col-sm-6">{{ survey.submittableTo | date: 'long' }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="spacer-60"></div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-title>
+        <h1>Submitted answers</h1>
+      </mat-card-title>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <div class="row" *ngFor="let question of survey.questions">
+          <div class="col-sm-6">{{ question.label }}</div>
+          <div class="col-sm-6">
+            <ng-container [ngSwitch]="question.metadata.type">
+              <ng-container *ngSwitchCase="EQuestionMetadataType.DatePicker">
+                {{
+                  surveySubmission.answers[question.identifier] | date: 'long'
+                }}
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                {{ surveySubmission.answers[question.identifier] }}
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="spacer-15 visible-xs"></div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
