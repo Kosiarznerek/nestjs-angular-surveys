@@ -49,19 +49,20 @@
     class="col-lg-12"
   >
     <mat-card class="questions">
-      <mat-card-header>
-        <mat-card-title [ngSwitch]="survey.displayFormat">
-          <ng-container *ngSwitchCase="ESurveyDisplayFormat.AllAtOnce">
-            <h1>Answer questions</h1>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <h1>
-              Question {{ currentQuestionIndex + 1 }} of
-              {{ survey.questions.length }}
-            </h1>
-          </ng-container>
-        </mat-card-title>
-      </mat-card-header>
+      <mat-card-title [ngSwitch]="survey.displayFormat">
+        <ng-container *ngSwitchCase="ESurveyDisplayFormat.AllAtOnce">
+          <h1>Answer questions</h1>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <h1>
+            Question {{ currentQuestionIndex + 1 }} of
+            {{ survey.questions.length }}
+          </h1>
+          <h1 *ngIf="questionTimer$ | async as timeLeft">
+            {{ timeLeft | number: '1.2-2' }}s
+          </h1>
+        </ng-container>
+      </mat-card-title>
 
       <mat-divider></mat-divider>
 
@@ -292,7 +293,7 @@
               currentQuestionIndex === 0 ||
               survey.displayFormat === ESurveyDisplayFormat.SingleRestricted
             "
-            (click)="currentQuestionIndex = currentQuestionIndex - 1"
+            (click)="navigatePreviousQuestion()"
           >
             Previous
           </button>
@@ -303,7 +304,7 @@
               formGroup.controls[currentQuestionIdentifier].invalid ||
               currentQuestionIndex === survey.questions.length - 1
             "
-            (click)="currentQuestionIndex = currentQuestionIndex + 1"
+            (click)="navigateNextQuestion()"
           >
             Next
           </button>

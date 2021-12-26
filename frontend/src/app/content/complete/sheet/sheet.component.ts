@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -20,7 +20,7 @@ import {
   SurveySubmission,
   TextQuestionMetadata,
 } from 'common';
-import { catchError, of } from 'rxjs';
+import { catchError, of, Subject } from 'rxjs';
 import { AuthQueryParam } from '../../../authenticate/authenticate.models';
 import { FetchService } from '../../../fetch/fetch.service';
 import { SummaryQueryParams } from '../complete.models';
@@ -30,11 +30,13 @@ import { SummaryQueryParams } from '../complete.models';
   templateUrl: './sheet.component.html',
   styleUrls: ['./sheet.component.scss'],
 })
-export class SheetComponent {
+export class SheetComponent implements OnInit, OnDestroy {
   public readonly survey: Survey;
   public readonly formGroup: FormGroup;
+  public readonly ngOnDestroy$: Subject<void>;
 
   public currentQuestionIndex: number;
+  public questionTimer$: Subject<number> | null;
 
   public readonly ESurveyDisplayFormat: typeof SurveyDisplayFormat;
   public readonly EQuestionMetadataType: typeof QuestionMetadataType;
@@ -49,11 +51,21 @@ export class SheetComponent {
   ) {
     this.survey = this.activatedRoute.snapshot.data['survey'];
     this.formGroup = this.createFormGroup();
+    this.ngOnDestroy$ = new Subject<void>();
 
     this.currentQuestionIndex = 0;
+    this.questionTimer$ = null;
 
     this.ESurveyDisplayFormat = SurveyDisplayFormat;
     this.EQuestionMetadataType = QuestionMetadataType;
+  }
+
+  public ngOnInit(): void {
+    this.setQuestionTimer();
+  }
+
+  public ngOnDestroy(): void {
+    this.ngOnDestroy$.next();
   }
 
   public get currentQuestionIdentifier(): string {
@@ -62,6 +74,15 @@ export class SheetComponent {
 
   public navigateBack(): void {
     return this.location.back();
+  }
+
+  public navigateNextQuestion() {
+    this.currentQuestionIndex++;
+    this.setQuestionTimer();
+  }
+
+  public navigatePreviousQuestion(): void {
+    this.currentQuestionIndex--;
   }
 
   public onFormSubmitHandler(): void {
@@ -76,8 +97,8 @@ export class SheetComponent {
     question: SurveyQuestion,
     answer: string,
   ): boolean {
-    const control: AbstractControl =
-      this.formGroup.controls[question.identifier];
+    const controls: Record<string, AbstractControl> = this.formGroup.controls;
+    const control: AbstractControl = controls[question.identifier];
     return control.value === answer;
   }
 
@@ -85,8 +106,8 @@ export class SheetComponent {
     question: SurveyQuestion,
     answer: string,
   ): void {
-    const control: AbstractControl =
-      this.formGroup.controls[question.identifier];
+    const controls: Record<string, AbstractControl> = this.formGroup.controls;
+    const control: AbstractControl = controls[question.identifier];
 
     if (control.value === answer) {
       control.setValue(null);
@@ -99,8 +120,8 @@ export class SheetComponent {
     question: SurveyQuestion,
     answer: string,
   ): boolean {
-    const control: AbstractControl =
-      this.formGroup.controls[question.identifier];
+    const controls: Record<string, AbstractControl> = this.formGroup.controls;
+    const control: AbstractControl = controls[question.identifier];
     return control.value?.includes(answer);
   }
 
@@ -108,8 +129,8 @@ export class SheetComponent {
     question: SurveyQuestion,
     answer: string,
   ): void {
-    const control: AbstractControl =
-      this.formGroup.controls[question.identifier];
+    const controls: Record<string, AbstractControl> = this.formGroup.controls;
+    const control: AbstractControl = controls[question.identifier];
     let controlValue: string[] | null = control.value;
 
     if (!controlValue) {
@@ -122,6 +143,49 @@ export class SheetComponent {
     }
 
     control.setValue(controlValue);
+  }
+
+  private setQuestionTimer(): void {
+    const questions: SurveyQuestion[] = this.survey.questions;
+    const question: SurveyQuestion = questions[this.currentQuestionIndex];
+
+    if (question.timeLimitInSeconds === null) {
+      return;
+    }
+
+    if (this.questionTimer$) {
+      this.questionTimer$.complete();
+    }
+
+    this.questionTimer$ = new Subject<number>();
+    let timeLeft: number = question.timeLimitInSeconds;
+    let previousDateValue: number = new Date().valueOf();
+
+    const interval: ReturnType<typeof setTimeout> = setInterval(() => {
+      const currentDateValue: number = new Date().valueOf();
+      const timeDifference: number = currentDateValue - previousDateValue;
+
+      previousDateValue = currentDateValue;
+      timeLeft -= timeDifference / 1_000;
+
+      if (timeLeft > 0) {
+        this.questionTimer$!.next(timeLeft);
+      } else {
+        this.questionTimer$!.next(0);
+        this.questionTimer$!.complete();
+        this.onQuestionTimeExpire();
+      }
+    }, 50);
+
+    this.questionTimer$.subscribe({ complete: () => clearInterval(interval) });
+  }
+
+  private onQuestionTimeExpire(): void {
+    if (this.currentQuestionIndex < this.survey.questions.length - 1) {
+      this.navigateNextQuestion();
+    } else {
+      this.onFormSubmitHandler();
+    }
   }
 
   private stringifyFormGroupRawValue(): SubmissionAnswers {

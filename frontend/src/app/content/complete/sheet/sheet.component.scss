@@ -16,6 +16,11 @@ mat-card.generals {
   }
 }
 
+mat-card-title {
+  display: flex;
+  justify-content: space-between;
+}
+
 mat-card-actions {
   display: flex;
 
