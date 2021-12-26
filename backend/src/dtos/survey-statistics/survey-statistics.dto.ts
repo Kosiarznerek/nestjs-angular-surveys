@@ -1,8 +1,9 @@
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { QuestionStatisticDto } from './question-statistics.dto';
+import { SurveyStatistics } from 'common';
+import { QuestionStatisticDto } from './question-statistic.dto';
 
 @ApiExtraModels(QuestionStatisticDto)
-export class SurveyStatisticsDto {
+export class SurveyStatisticsDto implements SurveyStatistics {
   public submittedSurveys: number;
 
   @ApiProperty({

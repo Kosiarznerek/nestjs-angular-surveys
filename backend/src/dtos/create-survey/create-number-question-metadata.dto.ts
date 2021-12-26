@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsOptional, IsPositive } from 'class-validator';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { CreateNumberQuestionMetadata, QuestionMetadataType } from 'common';
 
 const numberQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.StandartNumber,
 ];
 
-export class CreateNumberQuestionMetadataDto {
+export class CreateNumberQuestionMetadataDto
+  implements CreateNumberQuestionMetadata
+{
   @IsIn(numberQuestionMetadataTypes)
   @ApiProperty({
     enum: numberQuestionMetadataTypes,

@@ -1,3 +1,4 @@
+import { SurveyQuestion } from 'common';
 import {
   QuestionMetadataApiExtraModels,
   QuestionMetadataApiProperty,
@@ -5,7 +6,7 @@ import {
 } from './question-metadata.dto';
 
 @QuestionMetadataApiExtraModels()
-export class SurveyQustionDto {
+export class SurveyQuestionDto implements SurveyQuestion {
   public identifier: string;
   public label: string;
   public orderIndex: number;

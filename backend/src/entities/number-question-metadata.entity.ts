@@ -1,4 +1,4 @@
-import { QuestionMetadataType } from '../enums/question-metadata-type.enum';
+import { QuestionMetadataType } from 'common';
 
 export class NumberQuestionMetadataEntity {
   public type: QuestionMetadataType.StandartNumber;

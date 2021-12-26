@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsOptional, IsPositive } from 'class-validator';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { CreateTextQuestionMetadata, QuestionMetadataType } from 'common';
 
 const textQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.PlainText,
@@ -8,7 +8,9 @@ const textQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.AreaText,
 ];
 
-export class CreateTextQuestionMetadataDto {
+export class CreateTextQuestionMetadataDto
+  implements CreateTextQuestionMetadata
+{
   @IsIn(textQuestionMetadataTypes)
   @ApiProperty({
     enum: textQuestionMetadataTypes,

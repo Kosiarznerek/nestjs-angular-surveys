@@ -1,11 +1,11 @@
-import { QuestionMetadataType } from 'common';
+import { QuestionMetadataType } from '../..';
 
-export class SelectQuestionMetadataEntity {
-  public type:
+export interface SelectQuestionMetadata {
+  type:
     | QuestionMetadataType.SingleSelectRadio
     | QuestionMetadataType.SingleSelectCheckbox
     | QuestionMetadataType.SingleSelectDropdown
     | QuestionMetadataType.MultiSelectCheckbox
     | QuestionMetadataType.MultiSelectDropdown;
-  public availableValues: string[];
+  availableValues: string[];
 }

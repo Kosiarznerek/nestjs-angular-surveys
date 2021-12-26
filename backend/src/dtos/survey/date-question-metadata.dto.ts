@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { DateQuestionMetadata, QuestionMetadataType } from 'common';
 
-export class DateQuestionMetadataDto {
+export class DateQuestionMetadataDto implements DateQuestionMetadata {
   @ApiProperty({
     enum: [QuestionMetadataType.DatePicker],
   })

@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsIn, IsOptional } from 'class-validator';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { CreateDateQuestionMetadata, QuestionMetadataType } from 'common';
 
 const dateQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.DatePicker,
 ];
 
-export class CreateDateQuestionMetadataDto {
+export class CreateDateQuestionMetadataDto
+  implements CreateDateQuestionMetadata
+{
   @IsIn(dateQuestionMetadataTypes)
   @ApiProperty({
     enum: dateQuestionMetadataTypes,

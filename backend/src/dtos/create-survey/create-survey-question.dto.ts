@@ -10,6 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
+import { CreateSurveyQuestion } from 'common';
 import {
   CreateQuestionMetadataDto,
   CreateQuestionMetadataApiExtraModels,
@@ -18,7 +19,7 @@ import {
 } from './create-question-metadata.dto';
 
 @CreateQuestionMetadataApiExtraModels()
-export class CreateSurveyQuestionDto {
+export class CreateSurveyQuestionDto implements CreateSurveyQuestion {
   @IsString()
   @MinLength(5)
   @MaxLength(400)

@@ -6,7 +6,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { CreateSelectQuestionMetadata, QuestionMetadataType } from 'common';
 
 const selectQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.SingleSelectRadio,
@@ -16,7 +16,9 @@ const selectQuestionMetadataTypes: QuestionMetadataType[] = [
   QuestionMetadataType.MultiSelectDropdown,
 ];
 
-export class CreateSelectQuestionMetadataDto {
+export class CreateSelectQuestionMetadataDto
+  implements CreateSelectQuestionMetadata
+{
   @IsIn(selectQuestionMetadataTypes)
   @ApiProperty({
     enum: selectQuestionMetadataTypes,

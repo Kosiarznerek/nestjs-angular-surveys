@@ -1,6 +1,6 @@
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { DiscriminatorDescriptor } from 'class-transformer';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { QuestionMetadataType } from 'common';
 import { CreateDateQuestionMetadataDto } from './create-date-question-metadata.dto';
 import { CreateNumberQuestionMetadataDto } from './create-number-question-metadata.dto';
 import { CreateSelectQuestionMetadataDto } from './create-select-question-metadata.dto';

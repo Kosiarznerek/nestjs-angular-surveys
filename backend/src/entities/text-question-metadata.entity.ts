@@ -1,4 +1,4 @@
-import { QuestionMetadataType } from '../enums/question-metadata-type.enum';
+import { QuestionMetadataType } from 'common';
 
 export class TextQuestionMetadataEntity {
   public type:

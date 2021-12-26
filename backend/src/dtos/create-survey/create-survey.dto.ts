@@ -11,11 +11,11 @@ import {
   IsPositive,
   ValidateNested,
 } from 'class-validator';
-import { SurveyDisplayFormat } from '../../enums/survey-display-format.enum';
+import { CreateSurvey, SurveyDisplayFormat } from 'common';
 import { SurveyQuestionsHaveValidOrderValidator } from '../../validators/survey-questions-have-valid-order.validator';
 import { CreateSurveyQuestionDto } from './create-survey-question.dto';
 
-export class CreateSurveyDto {
+export class CreateSurveyDto implements CreateSurvey {
   @IsBoolean()
   public publicStatistics: boolean;
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { QuestionMetadataType, SelectQuestionMetadata } from 'common';
 
-export class SelectQuestionMetadataDto {
+export class SelectQuestionMetadataDto implements SelectQuestionMetadata {
   @ApiProperty({
     enum: [
       QuestionMetadataType.SingleSelectRadio,

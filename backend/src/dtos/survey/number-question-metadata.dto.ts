@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { NumberQuestionMetadata, QuestionMetadataType } from 'common';
 
-export class NumberQuestionMetadataDto {
+export class NumberQuestionMetadataDto implements NumberQuestionMetadata {
   @ApiProperty({
     enum: [QuestionMetadataType.StandartNumber],
   })

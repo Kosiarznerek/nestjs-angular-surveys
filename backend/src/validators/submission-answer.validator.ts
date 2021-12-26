@@ -18,6 +18,7 @@ import {
   min,
   minLength,
 } from 'class-validator';
+import { QuestionMetadataType } from 'common';
 import { Repository } from 'typeorm';
 import { SubmissionAnswersDto } from '../dtos/survey-submission/submission-answers.dto';
 import { DateQuestionMetadataEntity } from '../entities/date-question-metadata.entity';
@@ -26,7 +27,6 @@ import { SelectQuestionMetadataEntity } from '../entities/select-question-metada
 import { SurveyQuestionEntity } from '../entities/survey-question.entity';
 import { SurveyEntity } from '../entities/survey.entity';
 import { TextQuestionMetadataEntity } from '../entities/text-question-metadata.entity';
-import { QuestionMetadataType } from '../enums/question-metadata-type.enum';
 
 @Injectable()
 export class SubmissionAnswerValidator implements PipeTransform {

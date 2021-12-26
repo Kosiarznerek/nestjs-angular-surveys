@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestionMetadataType } from '../../enums/question-metadata-type.enum';
+import { QuestionMetadataType, TextQuestionMetadata } from 'common';
 
-export class TextQuestionMetadataDto {
+export class TextQuestionMetadataDto implements TextQuestionMetadata {
   @ApiProperty({
     enum: [
       QuestionMetadataType.PlainText,

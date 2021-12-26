@@ -1,16 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  CreateSurvey,
+  QuestionMetadataType,
+  SubmissionAnswers,
+  Survey,
+  SurveyStatistics,
+  SurveySubmission,
+} from 'common';
 import { Repository } from 'typeorm';
-import { CreateSurveyDto } from '../dtos/create-survey/create-survey.dto';
-import { SurveyStatisticsDto } from '../dtos/survey-statistics/survey-statistics.dto';
-import { SubmissionAnswersDto } from '../dtos/survey-submission/submission-answers.dto';
-import { SurveySubmissionDto } from '../dtos/survey-submission/survey-submission.dto';
-import { SurveyDto } from '../dtos/survey/survey.dto';
 import { SubmissionAnswersEntity } from '../entities/submission-answers.entity';
 import { SurveyQuestionEntity } from '../entities/survey-question.entity';
 import { SurveySubmissionEntity } from '../entities/survey-submission.entity';
 import { SurveyEntity } from '../entities/survey.entity';
-import { QuestionMetadataType } from '../enums/question-metadata-type.enum';
 
 @Injectable()
 export class SurveysService {
@@ -21,11 +23,11 @@ export class SurveysService {
     private surveySubmissionRepository: Repository<SurveySubmissionEntity>,
   ) {}
 
-  public create(model: CreateSurveyDto): Promise<SurveyDto> {
+  public create(model: CreateSurvey): Promise<Survey> {
     return this.surveyRepository.save(model);
   }
 
-  public async findOne(surveyIdentifier: string): Promise<SurveyDto> {
+  public async findOne(surveyIdentifier: string): Promise<Survey> {
     const surveyEntity: SurveyEntity = await this.surveyRepository.findOne({
       identifier: surveyIdentifier,
     });
@@ -41,8 +43,7 @@ export class SurveysService {
 
   public async getStatistics(
     surveyIdentifier: string,
-  ): Promise<SurveyStatisticsDto> {
-    const surveyStatisticsDto: SurveyStatisticsDto = new SurveyStatisticsDto();
+  ): Promise<SurveyStatistics> {
     const surveyEntity: SurveyEntity = await this.surveyRepository.findOne({
       relations: ['submissions'],
       where: {
@@ -50,7 +51,10 @@ export class SurveysService {
       },
     });
 
-    surveyStatisticsDto.submittedSurveys = surveyEntity.submissions.length;
+    const surveyStatistics: SurveyStatistics = {
+      submittedSurveys: surveyEntity.submissions.length,
+      questionStatistics: {},
+    };
 
     for (const question of surveyEntity.questions) {
       const questionTotalAnswers: number = this.getQuestionTotalAnswers(
@@ -58,9 +62,9 @@ export class SurveysService {
         surveyEntity.submissions,
       );
 
-      surveyStatisticsDto.questionStatistics[question.identifier] = {
+      surveyStatistics.questionStatistics[question.identifier] = {
         totalAnswers: questionTotalAnswers,
-        noAnswers: surveyStatisticsDto.submittedSurveys - questionTotalAnswers,
+        noAnswers: surveyStatistics.submittedSurveys - questionTotalAnswers,
         commonAnswers: this.getQuestionCommonAnswers(
           question,
           surveyEntity.submissions,
@@ -68,13 +72,13 @@ export class SurveysService {
       };
     }
 
-    return surveyStatisticsDto;
+    return surveyStatistics;
   }
 
   public async submitAnswers(
     surveyIdentifier: string,
-    answers: SubmissionAnswersDto,
-  ): Promise<SurveySubmissionDto> {
+    answers: SubmissionAnswers,
+  ): Promise<SurveySubmission> {
     const surveyEntity: SurveyEntity = await this.surveyRepository.findOne({
       identifier: surveyIdentifier,
     });
@@ -92,7 +96,7 @@ export class SurveysService {
 
   public async findAllSubmissions(
     surveyIdentifier: string,
-  ): Promise<SurveySubmissionDto[]> {
+  ): Promise<SurveySubmission[]> {
     const surveyEntity: SurveyEntity = await this.surveyRepository.findOne({
       relations: ['submissions'],
       where: {
@@ -106,7 +110,7 @@ export class SurveysService {
   public async findOneSubmission(
     surveyIdentifier: string,
     submissionIdentifier: string,
-  ): Promise<SurveySubmissionDto> {
+  ): Promise<SurveySubmission> {
     const surveyEntity: SurveyEntity = await this.surveyRepository.findOne({
       identifier: surveyIdentifier,
     });

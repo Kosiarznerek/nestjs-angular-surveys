@@ -5,9 +5,9 @@ import {
   OneToMany,
   CreateDateColumn,
 } from 'typeorm';
-import { SurveyDisplayFormat } from '../enums/survey-display-format.enum';
 import { SurveySubmissionEntity } from './survey-submission.entity';
 import { SurveyQuestionEntity } from './survey-question.entity';
+import { SurveyDisplayFormat } from 'common';
 
 @Entity()
 export class SurveyEntity {
