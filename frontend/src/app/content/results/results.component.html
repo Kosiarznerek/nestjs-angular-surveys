@@ -77,7 +77,32 @@
         <div class="spacer-15 visible-xs"></div>
         <div class="row">
           <div class="col-sm-6">Common answers</div>
-          <div class="col-sm-6">{{ statistics.commonAnswers }}</div>
+          <div class="col-sm-6">
+            <ng-container
+              *ngFor="
+                let commonAnswer of statistics.commonAnswers;
+                let answerIndex = index
+              "
+            >
+              <ng-container
+                *ngIf="
+                  question.metadata.type === EQuestionMetadataType.DatePicker;
+                  then dateQuestionFormatTemplate;
+                  else standartQuestionFormatTemplate
+                "
+              ></ng-container>
+              <ng-template #dateQuestionFormatTemplate>{{
+                commonAnswer | date: 'd MMM y'
+              }}</ng-template>
+              <ng-template #standartQuestionFormatTemplate>{{
+                commonAnswer
+              }}</ng-template>
+              <ng-container
+                *ngIf="answerIndex < statistics.commonAnswers.length - 1"
+                >,
+              </ng-container>
+            </ng-container>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
