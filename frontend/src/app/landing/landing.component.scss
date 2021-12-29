@@ -1,11 +1,10 @@
 #wrapper {
-  background: #3f51b5;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100%;
   justify-content: center;
-  color: white;
+  background: var(--app-card-background-color);
 
   div[class^='col'] {
     margin: 15px 0px;
