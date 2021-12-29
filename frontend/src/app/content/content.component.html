@@ -2,6 +2,10 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <h1>{{ toolbarHeaderText$ | async }}</h1>
+    <button mat-icon-button (click)="toggleTheme()">
+      <mat-icon *ngIf="isDarkTheme$ | async">wb_sunny</mat-icon>
+      <mat-icon *ngIf="!(isDarkTheme$ | async)">brightness_4</mat-icon>
+    </button>
     <button mat-icon-button (click)="navigateLanding()">
       <mat-icon>home</mat-icon>
     </button>

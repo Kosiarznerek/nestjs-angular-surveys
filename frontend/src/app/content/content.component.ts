@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, Observable, startWith } from 'rxjs';
+import { ThemeService } from '../theme/theme.service';
 
 @Component({
   selector: 'app-content',
@@ -8,9 +9,14 @@ import { filter, map, Observable, startWith } from 'rxjs';
   styleUrls: ['./content.component.scss'],
 })
 export class ContentComponent {
+  public readonly isDarkTheme$: Observable<boolean>;
   public readonly toolbarHeaderText$: Observable<string>;
 
-  public constructor(private readonly router: Router) {
+  public constructor(
+    private readonly router: Router,
+    private readonly themeService: ThemeService,
+  ) {
+    this.isDarkTheme$ = this.themeService.isDark$;
     this.toolbarHeaderText$ = this.router.events.pipe(
       startWith(new NavigationEnd(NaN, '', '')),
       filter((routeEvent) => routeEvent instanceof NavigationEnd),
@@ -21,6 +27,11 @@ export class ContentComponent {
 
   public navigateLanding(): Promise<boolean> {
     return this.router.navigate(['/']);
+  }
+
+  public toggleTheme(): void {
+    this.themeService.toggle();
+    this.themeService.preserveState();
   }
 
   private getToolbalHeaderText(routerUrl: string): string {
