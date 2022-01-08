@@ -119,10 +119,15 @@
         <h1 class="mr-0">Submitted answers</h1>
       </mat-card-title>
 
-      <mat-divider *ngIf="!surveyStatistics.submittedSurveys"></mat-divider>
+      <mat-divider
+        *ngIf="surveySubmissions === null || !surveyStatistics.submittedSurveys"
+      ></mat-divider>
 
       <mat-card-content *ngIf="!surveyStatistics.submittedSurveys">
         <p>Nobody has answered your survey yet</p>
+      </mat-card-content>
+      <mat-card-content *ngIf="surveySubmissions === null">
+        <p>This option is available for administrator only</p>
       </mat-card-content>
     </mat-card>
   </div>

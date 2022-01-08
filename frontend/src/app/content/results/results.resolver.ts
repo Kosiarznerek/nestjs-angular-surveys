@@ -31,14 +31,16 @@ export class ResultsResolverService implements Resolve<ResultsResolverResult> {
     const surveyId: string | undefined = queryParams[surveyIdParam];
     const surveyToken: string | undefined = queryParams[surveyTokenParam];
 
-    if (!surveyId || !surveyToken) {
+    if (!surveyId) {
       this.router.navigate([`/error/${HttpStatusCode.BadRequest}`]);
       return of();
     } else {
       return forkJoin([
         this.fetchService.findOne$(surveyId),
         this.fetchService.getStatistics$(surveyId, surveyToken),
-        this.fetchService.findAllSubmissions$(surveyId, surveyToken),
+        surveyToken
+          ? this.fetchService.findAllSubmissions$(surveyId, surveyToken)
+          : of(null),
       ])
         .pipe(catchError((error: unknown) => this.handleError(error)))
         .pipe(

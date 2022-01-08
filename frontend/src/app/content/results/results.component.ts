@@ -17,7 +17,7 @@ import { ResultsRouteData } from './results.model';
 export class ResultsComponent {
   public readonly survey: Survey;
   public readonly surveyStatistics: SurveyStatistics;
-  public readonly surveySubmissions: SurveySubmission[];
+  public readonly surveySubmissions: SurveySubmission[] | null;
   public readonly EQuestionMetadataType: typeof QuestionMetadataType;
 
   public constructor(

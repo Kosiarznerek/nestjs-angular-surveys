@@ -72,18 +72,14 @@ export class AuthenticateComponent {
     const formGroup: FormGroup = this.formBuilder.group({});
 
     for (const queryParamName of this.configuration.outputQueryParams) {
-      const formControl: FormControl = this.createUUIDFormControl();
+      const formControl: FormControl = new FormControl(
+        undefined,
+        this.createUUIDValidatorFn(),
+      );
       formGroup.addControl(queryParamName, formControl);
     }
 
     return formGroup;
-  }
-
-  private createUUIDFormControl(): FormControl {
-    return new FormControl(
-      undefined,
-      Validators.compose([Validators.required, this.createUUIDValidatorFn()]),
-    );
   }
 
   private createUUIDValidatorFn(): ValidatorFn {
